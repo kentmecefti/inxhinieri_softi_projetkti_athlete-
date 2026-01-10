@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>🏋️ Gym Tracker</title>
+    <link rel="stylesheet" href="../../../css/pages/work/orange.css">
+</head>
+<body>
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="row">
+            <h1 class="title">🏋️ Gym Tracker</h1>
+        </div>
+
+        <!-- ===== TABS ===== -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="addTab">➕ Add Session</button>
+            <button class="tab-btn" data-tab="logTab">🔍 View Log</button>
+        </div>
+    </div>
+
+    <!-- ===== TAB: ADD SESSION ===== -->
+    <div id="addTab" class="tab-content active">
+        <div class="card">
+            <h3>Add Session</h3>
+            <div class="grid grid-3">
+                <div>
+                    <label for="date">Date</label>
+                    <input type="date" id="date">
+                </div>
+                <div>
+                    <label for="category">Category</label>
+                    <select id="category">
+                        <option value="weight">Weight Exercise</option>
+                        <option value="plyo">Plyometrics</option>
+                        <option value="reflex">Reflexes</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="name">Exercise / Drill</label>
+                    <input id="name" placeholder="e.g., Bench Press / Box Jumps / Reaction Ball">
+                </div>
+            </div>
+
+            <div class="grid grid-3" id="metricRow" style="margin-top:10px">
+                <!-- dynamic metric fields appear here -->
+            </div>
+
+            <div class="grid grid-2" style="margin-top:10px">
+                <div>
+                    <label for="notes">Notes</label>
+                    <input id="notes" placeholder="How it felt, cues, etc.">
+                </div>
+                <div>
+                    <label>&nbsp;</label>
+                    <div class="row">
+                        <button id="addBtn">Add Entry</button>
+                        <button class="ghost" id="clearFormBtn" type="button">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== TAB: LOG / SEARCH ===== -->
+    <div id="logTab" class="tab-content">
+        <div class="card">
+            <h3>Session Log & Filters</h3>
+
+            <div class="toolbar">
+                <select id="filterCategory">
+                    <option value="all">All Categories</option>
+                    <option value="weight">Weight</option>
+                    <option value="plyo">Plyometrics</option>
+                    <option value="reflex">Reflexes</option>
+                </select>
+                <input id="searchBox" placeholder="Search exercise/drill…">
+                <input type="date" id="fromDate">
+                <input type="date" id="toDate">
+                <button id="resetFiltersBtn" type="button">Reset</button>
+                <div style="flex:1"></div>
+                <button id="exportBtn" type="button">Export</button>
+                <button id="importBtn" type="button">Import</button>
+                <input id="importFile" type="file" accept="application/json" style="display:none">
+            </div>
+
+            <hr class="sep">
+
+            <div class="table-wrap" id="tableWrap">
+                <table id="logTable">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Exercise / Drill</th>
+                        <th>Metrics</th>
+                        <th>Notes</th>
+                        <th style="width:1%"></th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    <tr><td colspan="6" class="empty">No entries yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row" style="justify-content:flex-end; margin-top:10px">
+                <span class="small">Stored locally & synced with athlete’s sessions</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="../../../js/env.js"></script>
+<script src="../../../js/pages/work/gym.js"></script>
+<script src="../../../js/acces.js"></script>
+
+</body>
+</html>
+

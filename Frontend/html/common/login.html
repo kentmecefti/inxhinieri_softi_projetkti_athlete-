@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Login — Athlete Tracker</title>
+    <link rel="stylesheet" href="../../css/common/login2.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>Login</h1>
+
+        <form id="loginForm">
+
+            <label>Username</label>
+            <input type="text" id="username" required />
+
+            <label>Password</label>
+
+            <!-- PASSWORD FIELD WITH TOGGLE -->
+            <div class="password-wrapper">
+                <input type="password" id="password" required />
+                <i id="togglePassword" class="fa-solid fa-eye eye-icon"></i>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+
+            <p id="forgotMsg" class="muted" style="display: none;">
+                Forgot your password?
+                <a href="forgot-password.html">Reset here</a>
+            </p>
+
+            <p class="muted">Don't have an account?
+                <a href="signup.html">Sign up</a>
+            </p>
+        </form>
+
+    </div>
+</div>
+
+<script src="../../js/common/login.js"></script>
+<script src="../../js/env.js"></script>
+
+</body>
+</html>

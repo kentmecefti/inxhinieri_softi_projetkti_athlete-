@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Personal Coach Dashboard</title>
+
+    <!-- ===== STYLES ===== -->
+    <link rel="stylesheet" href="../css/coaches.css" />
+    <link rel="stylesheet" href="../css/common/menu.css" />
+</head>
+
+<body class="coach">
+<!-- ===== MENU TOGGLE ===== -->
+<button class="menu-toggle" aria-label="Open menu">☰</button>
+
+<!-- ===== SIDEBAR ===== -->
+<nav class="sidebar" id="sidebar">
+    <div class="profile">
+        <img id="userPhoto" alt="Profile">
+        <h2 id="userTitle">Loading…</h2>
+        <p id="userRoleText">Role</p>
+    </div>
+
+    <div class="tabs-container">
+        <h3 class="tab-title">Coach Dashboard</h3>
+
+        <div class="tabs">
+            <!-- EXISTING TABS -->
+            <button class="tab active" data-target="athletesTab">🏃 Athletes</button>
+            <button class="tab" data-target="plansTab">📅 Plans</button>
+
+            <!-- ⭐ NEW COACH INFO TAB -->
+            <button class="tab" data-target="coachInfoTab">🧍‍♂️ Coach Info</button>
+        </div>
+    </div>
+
+    <div class="tabs-container" style="margin-top: 10px;">
+        <button class="tab back-btn" onclick="goBack()">🏠 Go Home</button>
+    </div>
+
+
+    <div class="logout-container">
+        <button id="logoutBtn" class="logout-btn green">🚪 Logout</button>
+    </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main>
+    <section id="athletesTab" class="tab-content active iframe-section">
+        <iframe id="athleteFrame"></iframe>
+    </section>
+
+    <section id="plansTab" class="tab-content hidden iframe-section">
+        <iframe id="planFrame"></iframe>
+    </section>
+
+    <section id="coachInfoTab" class="tab-content hidden iframe-section">
+        <iframe id="coachInfoFrame"></iframe>
+    </section>
+</main>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="../js/env.js"></script>
+<script src="../js/common/logout.js"></script>
+<script src="../js/common/menu.js"></script>
+<script src="../js/acces.js"></script>
+<script src="../js/coaches.js" defer></script>
+</body>
+</html>

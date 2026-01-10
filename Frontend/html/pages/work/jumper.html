@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🦘 Jump Results Tracker</title>
+    <link rel="stylesheet" href="../../../css/pages/work/again3.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="topbar vertical-header">
+
+        <div class="center header-main">
+
+            <div class="title-block">
+                <h1 class="title">
+                    Jumper Tracker
+                    <span id="athleteNameTitle" class="subtitle">· Test Athlete</span>
+                </h1>
+            </div>
+
+
+            <!-- VERTICAL TABS -->
+            <div class="vertical-tabs">
+                <button class="tab-btn active" data-tab="addTab">➕ Add</button>
+                <button class="tab-btn" data-tab="chartTab">📊 Chart</button>
+                <button class="tab-btn" data-tab="searchTab">🔍 Search</button>
+            </div>
+
+        </div>
+
+        <div class="right"></div>
+
+    </header>
+
+    <!-- ===== TAB CONTENTS ===== -->
+    <div id="addTab" class="tab-content active">
+        <section class="card full">
+            <h2>Add Jump Result</h2>
+            <div class="grid grid-3">
+                <label>Date:
+                    <input id="jumpDate" type="date" />
+                </label>
+
+                <label>Jump Type:
+                    <select id="jumpType" onchange="updateOptions()">
+                        <option value="">Select type</option>
+                        <option value="shhapes">Shhapes</option>
+                        <option value="ngaVendi">Nga Vendi</option>
+                        <option value="meVrull">Me Vrull</option>
+                        <option value="tripleJump">Triple Jump</option>
+                        <option value="highJump">High Jump</option>
+                    </select>
+                </label>
+
+                <label>Distance (m):
+                    <input id="distanceM" type="number" step="0.01" min="0" />
+                </label>
+                <label for="notes">Notes:</label>
+                <textarea id="notes" rows="2" placeholder="Optional notes..."></textarea>
+            </div>
+
+            <div id="jumpOptions" class="grid grid-2"></div>
+            <input hidden id="detail" />
+
+            <div class="actions">
+                <button onclick="addJump()">Add Jump</button>
+                <button class="ghost" onclick="resetForm()">Reset</button>
+            </div>
+        </section>
+    </div>
+
+    <div id="chartTab" class="tab-content">
+        <section class="card full">
+            <h2>Jump Distance Chart</h2>
+            <div class="grid grid-3">
+                <label>Jump Type:
+                    <select id="chartJumpType" onchange="updateDetailOptions()"></select>
+                </label>
+
+                <div id="chartDetailContainer"></div>
+
+                <label>From:
+                    <input type="date" id="chartFrom">
+                </label>
+
+                <label>To:
+                    <input type="date" id="chartTo">
+                </label>
+            </div>
+
+            <div class="actions">
+                <button onclick="updateChart()">Update Chart</button>
+            </div>
+
+            <div id="chartsContainer" class="chart-container full"></div>
+        </section>
+    </div>
+
+    <div id="searchTab" class="tab-content">
+        <section class="card full">
+            <h2>Search Jumps</h2>
+            <div class="grid grid-3">
+                <label>Jump Type:
+                    <select id="searchJumpType"></select>
+                </label>
+
+                <label>From:
+                    <input type="date" id="searchFrom" />
+                </label>
+
+                <label>To:
+                    <input type="date" id="searchTo" />
+                </label>
+
+                <label>Sort By:
+                    <select id="searchSortBy">
+                        <option value="jumpDate">Date</option>
+                        <option value="distanceM">Distance</option>
+                    </select>
+                </label>
+
+                <label>Order:
+                    <select id="searchSortOrder">
+                        <option value="asc">Ascending (↑)</option>
+                        <option value="desc">Descending (↓)</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="actions">
+                <button onclick="applySearchFilters()">Search</button>
+                <button class="ghost" onclick="clearSearchFilters()">Clear</button>
+            </div>
+
+            <ul id="jumpResultsList">
+                <li id="emptyMessage" class="empty">No jumps yet.</li>
+            </ul>
+        </section>
+    </div>
+
+<div class="alert" id="alertBox"></div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="../../../js/env.js"></script>
+<script src="../../../js/pages/work/jumper.js" defer></script>
+    <script src="../../../js/acces.js"></script>
+</body>
+</html>
+

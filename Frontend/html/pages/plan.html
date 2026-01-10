@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>📋 Weekly Training Plan</title>
+
+    <link rel="stylesheet" href="../../css/pages/plan.css">
+</head>
+
+<body>
+
+<!-- ============================
+     TOP BAR
+============================= -->
+<header class="topbar">
+    
+    <div class="topbar-center">
+        <h2 id="athleteTitle">Weekly Plan</h2>
+        <div id="modeBadgeContainer"></div>
+    </div>
+
+    <div class="topbar-right controls">
+        <label>
+            Week:
+            <input id="weekPicker" type="week" class="week-picker" />
+        </label>
+    </div>
+
+</header>
+
+
+<!-- ============================
+     COACH ONLY: DROPDOWN
+============================= -->
+<div class="page-wrapper">
+    <div class="plan-actions" style="display:none; margin:20px 0;">
+
+    <button id="toggleAthletesBtn" class="btn ghost" style="margin-top:18px; display:none;">
+        👤 Select Athletes
+    </button>
+
+    <div id="athleteDropdown" class="dropdown-container" style="display:none;">
+        <label class="dropdown-label">Select Athletes</label>
+
+        <input id="athleteSearch" class="dropdown-search"
+               type="text" placeholder="Search athlete..." />
+
+        <div id="athleteList" class="dropdown-list"></div>
+
+        <p class="hint" style="font-size:0.8rem; color:#64748b; margin-top:10px;">
+            Tip: Select "ALL Athletes" to send the plan to every accepted athlete.
+        </p>
+    </div>
+
+        <button id="sendPredBtn" class="btn blue">📋 Save Prediction</button>
+        <button id="sendActBtn" class="btn green">✅ Save Actual</button>
+    </div>
+
+
+    <!-- ============================
+         MAIN CONTENT (TABLE)
+    ============================= -->
+    <main>
+        <div class="content"> <!-- Center alignment wrapper -->
+            <table id="planTable">
+                <thead>
+                <tr id="theadRow"></tr>
+                </thead>
+                <tbody id="planTableBody"></tbody>
+            </table>
+        </div>
+    </main>
+
+</div>
+
+
+<!-- ============================
+     LOADING OVERLAY
+============================= -->
+<div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p>Processing...</p>
+</div>
+
+
+<!-- ============================
+     TOAST
+============================= -->
+<div id="toast" class="toast"></div>
+
+
+<!-- ============================
+     SCRIPTS
+============================= -->
+<script src="../../js/env.js"></script>
+<script src="../../js/acces.js"></script>
+<script src="../../js/pages/plan.js" defer></script>
+
+</body>
+</html>

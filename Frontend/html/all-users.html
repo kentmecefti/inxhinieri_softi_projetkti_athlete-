@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>👥 All Users — Coaches & Athletes</title>
+
+    <!-- ===== STYLES ===== -->
+    <link rel="stylesheet" href="../css/users.css" />
+    <link rel="stylesheet" href="../css/common/menu.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+</head>
+
+<body>
+<button class="menu-toggle" aria-label="Open menu">☰</button>
+
+<!-- ===== SIDEBAR MENU ===== -->
+<nav class="sidebar" id="sidebar">
+    <div class="profile">
+        <img id="userPhoto" alt="Profile" />
+        <h2 id="userTitle">Loading…</h2>
+        <p id="userRoleText">Role</p>
+    </div>
+
+    <div class="tabs-container">
+        <h3 class="tab-title">Filter by Role</h3>
+        <div class="tabs" id="roleTabs">
+            <button class="tab active" data-filter="all">All</button>
+            <button class="tab" data-filter="athlete">Athletes</button>
+            <button class="tab" data-filter="coach">Coaches</button>
+        </div>
+
+        <h3 class="tab-title" style="margin-top:1rem;">Filter by Status</h3>
+        <div class="tabs" id="statusTabs">
+            <button class="tab active" data-filter="all">All</button>
+            <button class="tab" data-filter="active">Active</button>
+            <button class="tab" data-filter="inactive">Inactive</button>
+        </div>
+    </div>
+    <ul class="menu" id="menuRoot">
+        <li class="item leaf">
+            <div class="row">
+                <div class="left">
+                    <span class="icon">🏠</span>
+                    <button class="item-btn" onclick="location.href='dashboard.html'">Dashboard</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+
+    <div class="logout-container">
+        <button id="logoutBtn" class="logout-btn green">🚪 Logout</button>
+    </div>
+</nav>
+
+<!-- ===== MAIN CONTENT ===== -->
+<main>
+    <header>
+        <h1>👥 All Users — Coaches & Athletes</h1>
+
+        <div class="bar">
+            <input id="search" type="search" placeholder="Search by name…" />
+            <div class="kpis">
+                <div class="kpi active"><b id="kpiAll">0</b><span>Total</span></div>
+                <div class="kpi"><b id="kpiAth">0</b><span>Athletes</span></div>
+                <div class="kpi"><b id="kpiCoach">0</b><span>Coaches</span></div>
+                <div class="kpi"><b id="kpiActive">0</b><span>Active</span></div>
+                <div class="kpi"><b id="kpiInactive">0</b><span>Inactive</span></div>
+            </div>
+        </div>
+    </header>
+
+    <div id="err" class="err-box" style="display:none;"></div>
+
+    <table id="userTable" class="display">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <p id="empty" class="muted" style="display:none; text-align:center;">No users found.</p>
+</main>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="../js/env.js"></script>
+<script src="../js/common/menu.js"></script>
+<script src="../js/users.js"></script>
+<script src="../js/acces.js"></script>
+</body>
+</html>

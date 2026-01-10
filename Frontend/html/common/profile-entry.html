@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/common/profile-entry.css" />
+</head>
+<body>
+
+<div class="card">
+
+    <!-- ================= ATHLETE ================= -->
+    <form id="athleteForm" class="profile-form hidden">
+
+        <div class="form-group" style="grid-column:1/-1">
+            <label>Username</label>
+            <input id="ath-username" readonly />
+        </div>
+
+        <div class="form-group"><label>Name</label><input id="ath-name" /></div>
+        <div class="form-group"><label>Lastname</label><input id="ath-lastname" /></div>
+
+        <div class="form-group">
+            <label>Gender</label>
+            <select id="ath-gender">
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+        </div>
+
+        <div class="form-group"><label>Birth Date</label><input type="date" id="ath-birthDate" /></div>
+        <div class="form-group"><label>Age</label><input type="number" id="ath-age" /></div>
+        <div class="form-group"><label>Weight</label><input type="number" id="ath-weight" /></div>
+        <div class="form-group"><label>Height</label><input type="number" id="ath-height" /></div>
+
+        <div class="form-group"><label>Category</label><input id="ath-category" /></div>
+        <div class="form-group"><label>Performance</label><input id="ath-performance" /></div>
+        <div class="form-group"><label>Club</label><input id="ath-club" /></div>
+        <div class="form-group"><label>Country</label><input id="ath-country" /></div>
+        <div class="form-group"><label>City</label><input id="ath-city" /></div>
+
+        <button type="submit">💾 Update Athlete</button>
+        <div id="ath-msg" class="msg"></div>
+    </form>
+
+    <!-- ================= COACH ================= -->
+    <form id="coachForm" class="profile-form hidden">
+
+        <div class="form-group" style="grid-column:1/-1">
+            <label>Username</label>
+            <input id="coach-username" readonly />
+        </div>
+
+        <button type="button" class="btn">Change Password</button>
+
+        <div class="form-group"><label>Name</label><input id="coach-name" /></div>
+        <div class="form-group"><label>Lastname</label><input id="coach-lastname" /></div>
+
+        <div class="form-group">
+            <label>Gender</label>
+            <select id="coach-gender">
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+        </div>
+
+        <div class="form-group"><label>Experience</label><input type="number" id="coach-experienceYears" /></div>
+        <div class="form-group"><label>Specialization</label><input id="coach-specialization" /></div>
+        <div class="form-group"><label>Phone</label><input id="coach-phone" /></div>
+        <div class="form-group"><label>Club</label><input id="coach-club" /></div>
+        <div class="form-group"><label>Country</label><input id="coach-country" /></div>
+
+        <button type="submit">💾 Update Coach</button>
+        <div id="coach-msg" class="msg"></div>
+    </form>
+
+</div>
+
+<script src="/js/env.js"></script>
+<script src="/js/common/profile-entry.js" defer></script>
+</body>
+</html>

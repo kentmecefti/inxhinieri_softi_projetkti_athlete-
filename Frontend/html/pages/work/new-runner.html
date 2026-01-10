@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🏃 Runner Results Tracker</title>
+    <link rel="stylesheet" href="../../../css/pages/work/runner-new.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="topbar vertical-header">
+
+        <div class="center header-main">
+
+            <div class="title-block">
+                <h1 class="title">
+                    Runner Tracker
+                    <span id="athleteNameTitle" class="subtitle">· Test Athlete</span>
+                </h1>
+            </div>
+
+
+            <!-- VERTICAL TABS -->
+            <div class="vertical-tabs">
+                <button class="tab-btn active" data-tab="addTab">➕ Add</button>
+                <button class="tab-btn" data-tab="chartTab">📊 Chart</button>
+                <button class="tab-btn" data-tab="searchTab">🔍 Search</button>
+            </div>
+
+        </div>
+
+        <div class="right"></div>
+
+    </header>
+
+    <!-- ===== TAB 1: ADD RESULT ===== -->
+    <section id="addTab" class="tab-content active">
+        <div class="card full">
+            <h2>Add Result</h2>
+            <div class="grid grid-3">
+                <label>Race
+                    <select id="race">
+                        <option value="Stervitje">Stervitje</option>
+                        <option value="Event">Event</option>
+                    </select>
+                </label>
+
+                <label>Date
+                    <input type="date" id="date" />
+                </label>
+
+                <label>Race Type
+                    <select id="raceTypeSelect"></select>
+                </label>
+
+                <label>Distance
+                    <select id="distanceSelectInput" ></select>
+                </label>
+
+                <label>Weight
+                    <select id="weight">
+                        <option value="0">0 kg</option>
+                        <option value="5">5 kg</option>
+                        <option value="8">8 kg</option>
+                        <option value="10">10 kg</option>
+                    </select>
+                </label>
+
+                <label>Time (seconds)
+                    <input type="number" id="seconds" step="0.001" min="0" />
+                </label>
+
+                <label for="notes">Notes:</label>
+                <textarea id="notes" rows="2" placeholder="Optional notes..."></textarea>
+            </div>
+
+            <div class="actions">
+                <button onclick="addResult()">Add Result</button>
+                <button class="ghost" onclick="resetForm()">Reset</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TAB 2: CHART ===== -->
+    <section id="chartTab" class="tab-content">
+        <div class="card full">
+            <h2>Race Performance Chart</h2>
+            <div class="grid grid-3">
+                <label>Race
+                    <select id="chartRace">
+                        <option value="Stervitje">Stervitje</option>
+                        <option value="Event">Event</option>
+                    </select>
+                </label>
+
+                <label>Race Type
+                    <select id="chartRaceType"></select>
+                </label>
+
+                <label>Distance
+                    <select id="chartDistance"></select>
+                </label>
+
+                <label>Weight
+                    <select id="chartWeight">
+                        <option value="0">0 kg</option>
+                        <option value="5">5 kg</option>
+                        <option value="8">8 kg</option>
+                        <option value="10">10 kg</option>
+                    </select>
+                </label>
+
+                <label>From
+                    <input type="date" id="startDate" />
+                </label>
+
+                <label>To
+                    <input type="date" id="endDate" />
+                </label>
+
+                <label>&nbsp;
+                    <button class="ghost full-btn" onclick="updateChart()">Update Chart</button>
+                </label>
+            </div>
+
+            <div class="chart-wrapper">
+                <canvas id="raceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== TAB 3: SEARCH ===== -->
+    <section id="searchTab" class="tab-content">
+        <div class="card full">
+            <h2>Search Results</h2>
+
+            <div class="grid grid-3">
+                <label>Race
+                    <select id="searchRace">
+                        <option value="">All</option>
+                        <option value="Stervitje">Stervitje</option>
+                        <option value="Event">Event</option>
+                    </select>
+                </label>
+
+                <label>Race Type
+                    <select id="searchRaceType"></select>
+                </label>
+
+                <label>Distance
+                    <select id="searchDistance"></select>
+                </label>
+
+                <label>Weight
+                    <select id="searchWeight">
+                        <option value="">All</option>
+                        <option value="0">0 kg</option>
+                        <option value="5">5 kg</option>
+                        <option value="8">8 kg</option>
+                        <option value="10">10 kg</option>
+                    </select>
+                </label>
+
+                <label>From
+                    <input type="date" id="searchFrom" />
+                </label>
+
+                <label>To
+                    <input type="date" id="searchTo" />
+                </label>
+
+                <label>Sort By
+                    <select id="searchSortBy">
+                        <option value="date">Date</option>
+                        <option value="time">Time</option>
+                    </select>
+                </label>
+
+                <label>Order
+                    <select id="searchSortOrder">
+                        <option value="asc">Ascending (↑)</option>
+                        <option value="desc">Descending (↓)</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="actions">
+                <button onclick="applySearchFilters()">Search</button>
+                <button class="ghost" onclick="clearSearchFilters()">Clear</button>
+            </div>
+
+            <ul id="resultsList">
+                <li id="emptyMessage" class="empty">No results yet.</li>
+            </ul>
+
+            <button id="showMoreBtn" class="ghost" style="display:none;">Show More</button>
+        </div>
+    </section>
+</div>
+
+<div class="alert" id="alertBox"></div>
+
+<!-- ===== SCRIPTS ===== -->
+
+<!-- ===== SCRIPTS ===== -->
+<script src="../../../js/env.js"></script>
+<script src="../../../js/pages/work/runner.js" defer></script>
+<script src="../../../js/acces.js"></script>
+
+</body>
+</html>
+

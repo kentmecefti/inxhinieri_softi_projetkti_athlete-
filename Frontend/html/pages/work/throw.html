@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>🏹 Throwing Tracker</title>
+    <link rel="stylesheet" href="../../../css/pages/work/throw.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body><div class="container">
+
+    <header class="topbar vertical-header">
+        <div class="center header-main">
+            <div class="title-block">
+                <h1 class="title">
+                    Throw Tracker
+                    <span id="athleteTitle" class="subtitle">· Test Athlete</span>
+                </h1>
+            </div>
+
+            <div class="vertical-tabs">
+                <button type="button" class="tab-btn active" data-tab="addTab">➕ Add</button>
+                <button type="button" class="tab-btn" data-tab="chartTab">📊 Chart</button>
+                <button type="button" class="tab-btn" data-tab="searchTab">🔍 Search</button>
+            </div>
+        </div>
+        <div class="right"></div>
+    </header>
+
+        <!-- ADD TAB -->
+    <div id="addTab" class="tab-content active">
+        <section class="grid-2">
+            <!-- ADD THROW -->
+            <div class="card full">
+                <h2>Add Throw</h2>
+                <div class="grid grid-3">
+                    <label>Session
+                        <select id="sessionType">
+                            <option value="Training">Training</option>
+                            <option value="Competition">Competition</option>
+                        </select>
+                    </label>
+
+                    <label>Event
+                        <select id="event">
+                            <option>Javelin</option>
+                            <option>Hammer</option>
+                            <option>Discus</option>
+                            <option>Shot Put</option>
+                        </select>
+                    </label>
+
+                    <label>Throw Style
+                        <input id="throwStyle" placeholder="e.g. Spin, Glide" />
+                    </label>
+
+                    <label>Date
+                        <input type="date" id="date" />
+                    </label>
+
+                    <label>Distance (m)
+                        <input type="number" id="distance" step="0.01" placeholder="e.g. 62.50" />
+                    </label>
+
+                    <label>Wind (m/s)
+                        <input type="number" id="wind" step="0.1" placeholder="e.g. 1.5" />
+                    </label>
+                </div>
+
+                <label>Notes
+                    <textarea id="notes" rows="2" placeholder="Technique notes or conditions"></textarea>
+                </label>
+
+                <div class="actions">
+                    <button onclick="addThrow()">Add</button>
+                    <button class="ghost" onclick="resetAddForm()">Reset</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- CHART TAB -->
+    <div id="chartTab" class="tab-content">
+        <section class="card full">
+            <h2>Performance Chart</h2>
+
+            <div class="grid grid-3">
+                <label>Event
+                    <select id="chartEvent">
+                        <option value="">All</option>
+                        <option>Javelin</option>
+                        <option>Hammer</option>
+                        <option>Discus</option>
+                        <option>Shot Put</option>
+                    </select>
+                </label>
+
+                <label>From
+                    <input type="date" id="chartFrom" />
+                </label>
+
+                <label>To
+                    <input type="date" id="chartTo" />
+                </label>
+            </div>
+
+            <div class="grid grid-1" style="margin-top: 8px;">
+                <button class="ghost full-btn" onclick="updateChart()">Update Chart</button>
+            </div>
+
+            <div class="chart-wrapper" id="chartsContainer">
+                <canvas id="throwChart"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <!-- SEARCH TAB -->
+    <div id="searchTab" class="tab-content">
+        <section class="card full">
+            <h2>Search Throws</h2>
+            <div class="grid grid-3">
+                <label>Event
+                    <select id="searchEvent">
+                        <option value="">All</option>
+                        <option>Javelin</option>
+                        <option>Hammer</option>
+                        <option>Discus</option>
+                        <option>Shot Put</option>
+                    </select>
+                </label>
+
+                <label>Session
+                    <select id="searchSession">
+                        <option value="">All</option>
+                        <option>Training</option>
+                        <option>Competition</option>
+                    </select>
+                </label>
+
+                <label>Throw Style
+                    <input id="searchStyle" placeholder="e.g. Spin, Glide" />
+                </label>
+
+                <label>From
+                    <input type="date" id="searchFrom" />
+                </label>
+
+                <label>To
+                    <input type="date" id="searchTo" />
+                </label>
+
+                <label>Sort By
+                    <select id="sortBy">
+                        <option value="date">Date</option>
+                        <option value="distance">Distance</option>
+                    </select>
+                </label>
+
+                <label>Order
+                    <select id="sortOrder">
+                        <option value="desc">Descending</option>
+                        <option value="asc">Ascending</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="actions">
+                <button onclick="applySearch()">Search</button>
+                <button class="ghost" onclick="resetSearch()">Clear</button>
+            </div>
+        </section>
+
+        <!-- THROW LOG -->
+        <section class="card full">
+            <h2>Throw Log</h2>
+            <div class="stats-row">
+                <div class="stat"><strong id="statCount">0</strong><span>Throws</span></div>
+                <div class="stat"><strong id="statBest">—</strong><span>Best (m)</span></div>
+                <div class="stat"><strong id="statAvg">—</strong><span>Average (m)</span></div>
+            </div>
+            <ul id="throwList"></ul>
+        </section>
+    </div>
+    <div class="alert" id="alertBox"></div>
+
+<script src="../../../js/env.js"></script>
+<script src="../../../js/pages/work/throw.js"></script>
+    <script src="../../../js/acces.js"></script>
+</body>
+</html>

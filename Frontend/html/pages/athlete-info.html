@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/pages/athlete-info.css" />
+</head>
+<body>
+
+<div class="card">
+    <form id="athleteForm">
+
+        <!-- USERNAME (full width) -->
+        <div class="form-group" style="grid-column: 1 / -1;">
+            <label>Username</label>
+            <input id="username" type="text" readonly />
+        </div>
+
+        <!-- CHANGE PASSWORD BUTTON (full width) -->
+        <button id="openPassModal" class="btn" style="grid-column: 1 / -1;">
+            Change Password
+        </button>
+
+        <!-- ALL INPUTS (two columns) -->
+        <div class="form-group">
+            <label>Name:</label>
+            <input type="text" id="name" required>
+        </div>
+
+        <div class="form-group">
+            <label>Lastname:</label>
+            <input type="text" id="lastname">
+        </div>
+
+        <div class="form-group">
+            <label>Gender:</label>
+            <select id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Birth Date:</label>
+            <input type="date" id="birthDate">
+        </div>
+
+        <div class="form-group">
+            <label>Age:</label>
+            <input type="number" id="age">
+        </div>
+
+        <div class="form-group">
+            <label>Weight (kg):</label>
+            <input type="number" step="0.1" id="athWeight">
+        </div>
+
+        <div class="form-group">
+            <label>Height (cm):</label>
+            <input type="number" step="0.1" id="athHeight">
+        </div>
+
+        <div class="form-group">
+            <label>Category:</label>
+            <input type="text" id="category">
+        </div>
+
+        <div class="form-group">
+            <label>Performance:</label>
+            <input type="text" id="performance">
+        </div>
+
+        <div class="form-group">
+            <label>Club:</label>
+            <input type="text" id="club">
+        </div>
+
+        <div class="form-group">
+            <label>Country:</label>
+            <input type="text" id="country">
+        </div>
+
+        <div class="form-group">
+            <label>City:</label>
+            <input type="text" id="city">
+        </div>
+
+        <!-- SUBMIT BUTTON (full width) -->
+        <button type="submit" style="grid-column: 1 / -1;">💾 Update Athlete</button>
+
+        <div id="msg" class="msg" style="grid-column: 1 / -1;"></div>
+
+    </form>
+</div>
+
+<!-- PASSWORD MODAL -->
+<div id="passModal" class="modal">
+    <div class="modal-content">
+        <span id="closePassModal" class="close">&times;</span>
+        <h2>Change Password</h2>
+
+        <label>Old Password</label>
+        <input id="oldPass" type="password">
+
+        <label>New Password</label>
+        <input id="newPass" type="password">
+
+        <button id="savePasswordBtn" class="btn-save">Save</button>
+    </div>
+</div>
+
+<!-- JS -->
+<script src="../../js/pages/athlete-info.js" defer></script>
+<script src="../../js/env.js"></script>
+<script src="../../js/acces.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Sign Up | Athlete Tracker</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../../css/common/login.css" />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+<div class="auth-container">
+    <h1>Create Your Account</h1>
+
+    <!-- ================= SIGNUP FORM ================= -->
+    <form id="signupForm" class="auth-form">
+
+        <!-- Username -->
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input id="username"
+                   type="text"
+                   placeholder="Enter your username"
+                   required />
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email"
+                   type="email"
+                   placeholder="Enter your email"
+                   required />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input id="password"
+                   type="password"
+                   placeholder="Enter your password"
+                   required />
+            <i id="togglePassword" class="fa-solid fa-eye eye-icon"></i>
+        </div>
+
+        <!-- Role -->
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" required>
+                <option value="ATHLETE" selected>Athlete</option>
+                <option value="COACH">Coach</option>
+            </select>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn-primary">Sign Up</button>
+    </form>
+
+    <!-- Switch page -->
+    <p class="switch-auth">
+        Already have an account?
+        <a href="login.html">Log in here</a>
+    </p>
+</div>
+
+<!-- Environment + Script -->
+<script src="../../js/env.js"></script>
+<script src="../../js/common/signup.js"></script>
+
+</body>
+</html>
