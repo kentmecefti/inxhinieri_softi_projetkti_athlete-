@@ -5,6 +5,7 @@ import com.example.athleteresults.repositories.*;
 import com.example.athleteresults.security.JwtAuthFilter;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AthleteController.class)
+@AutoConfigureMockMvc(addFilters = false)   // 🔥 REQUIRED
 class AthleteControllerTest {
 
     @Autowired
@@ -33,13 +35,13 @@ class AthleteControllerTest {
     @MockBean private UserRepository userRepo;
     @MockBean private CoachRepository coachRepo;
 
-    // disable JWT filter
+    // Disable JWT filter completely
     @MockBean
     private JwtAuthFilter jwtAuthFilter;
 
-    // =====================================================
-    // GET /api/athletes
-    // =====================================================
+    /* =====================================================
+       GET /api/athletes (ADMIN)
+    ===================================================== */
     @Test
     @WithMockUser(roles = "ADMIN")
     void getAll_shouldReturn200() throws Exception {
@@ -49,59 +51,82 @@ class AthleteControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // =====================================================
-    // GET /api/athletes/{id} — ADMIN
-    // =====================================================
+    /* =====================================================
+       GET /api/athletes/{id} (ADMIN)
+    ===================================================== */
     @Test
     @WithMockUser(username = "admin", roles = "ADMIN")
     void getById_admin_shouldReturn200() throws Exception {
 
-        User user = new User();
+        com.example.athleteresults.entities.User user =
+                new com.example.athleteresults.entities.User();
         user.setId(1);
 
-        when(userRepo.findByUsername("admin")).thenReturn(Optional.of(user));
-        when(repo.findById(1)).thenReturn(Optional.of(new Athlete()));
+        Athlete athlete = new Athlete();
+        athlete.setId(1);
+
+        when(userRepo.findByUsername("admin"))
+                .thenReturn(Optional.of(user));
+        when(repo.findById(1))
+                .thenReturn(Optional.of(athlete));
 
         mockMvc.perform(get("/api/athletes/1"))
                 .andExpect(status().isOk());
     }
 
-    // =====================================================
-    // GET /api/athletes/{id} — ATHLETE accessing other
-    // =====================================================
+    /* =====================================================
+       ATHLETE accessing other athlete → 403
+    ===================================================== */
     @Test
     @WithMockUser(username = "athlete", roles = "ATHLETE")
     void athlete_accessing_other_shouldReturn403() throws Exception {
 
-        User user = new User();
+        com.example.athleteresults.entities.User user =
+                new com.example.athleteresults.entities.User();
         user.setId(5);
 
         Athlete logged = new Athlete();
-        logged.setUserId(5);
         logged.setId(1);
+        logged.setUserId(5);
 
-        when(userRepo.findByUsername("athlete")).thenReturn(Optional.of(user));
-        when(repo.findByUserId(5)).thenReturn(Optional.of(logged));
+        Athlete other = new Athlete();
+        other.setId(99);
+        other.setUserId(999);
+
+        when(userRepo.findByUsername("athlete"))
+                .thenReturn(Optional.of(user));
+        when(repo.findByUserId(5))
+                .thenReturn(Optional.of(logged));
+        when(repo.findById(99))
+                .thenReturn(Optional.of(other));
 
         mockMvc.perform(get("/api/athletes/99"))
                 .andExpect(status().isForbidden());
     }
 
-    // =====================================================
-    // GET /api/athletes/{id} — COACH not linked
-    // =====================================================
+    /* =====================================================
+       COACH not linked to athlete → 403
+    ===================================================== */
     @Test
     @WithMockUser(username = "coach", roles = "COACH")
     void coach_notLinked_shouldReturn403() throws Exception {
 
-        User user = new User();
+        com.example.athleteresults.entities.User user =
+                new com.example.athleteresults.entities.User();
         user.setId(10);
 
         Coach coach = new Coach();
         coach.setId(3);
 
-        when(userRepo.findByUsername("coach")).thenReturn(Optional.of(user));
-        when(coachRepo.findByUserId(10)).thenReturn(Optional.of(coach));
+        Athlete athlete = new Athlete();
+        athlete.setId(1);
+
+        when(userRepo.findByUsername("coach"))
+                .thenReturn(Optional.of(user));
+        when(coachRepo.findByUserId(10))
+                .thenReturn(Optional.of(coach));
+        when(repo.findById(1))
+                .thenReturn(Optional.of(athlete));
         when(relationRepo.existsByCoachIdAndAthleteIdAndStatusId(3, 1, 1))
                 .thenReturn(false);
 
@@ -109,14 +134,15 @@ class AthleteControllerTest {
                 .andExpect(status().isForbidden());
     }
 
-    // =====================================================
-    // POST /api/athletes
-    // =====================================================
+    /* =====================================================
+       POST /api/athletes
+    ===================================================== */
     @Test
     @WithMockUser(roles = "ADMIN")
     void create_shouldReturn200() throws Exception {
 
-        when(repo.save(any(Athlete.class))).thenReturn(new Athlete());
+        when(repo.save(any(Athlete.class)))
+                .thenReturn(new Athlete());
 
         mockMvc.perform(post("/api/athletes")
                         .with(csrf())
@@ -125,15 +151,17 @@ class AthleteControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // =====================================================
-    // PUT /api/athletes/{id}
-    // =====================================================
+    /* =====================================================
+       PUT /api/athletes/{id}
+    ===================================================== */
     @Test
     @WithMockUser(roles = "ADMIN")
     void update_shouldReturn200() throws Exception {
 
-        when(repo.findById(1)).thenReturn(Optional.of(new Athlete()));
-        when(repo.save(any(Athlete.class))).thenReturn(new Athlete());
+        when(repo.findById(1))
+                .thenReturn(Optional.of(new Athlete()));
+        when(repo.save(any(Athlete.class)))
+                .thenReturn(new Athlete());
 
         mockMvc.perform(put("/api/athletes/1")
                         .with(csrf())
@@ -142,14 +170,15 @@ class AthleteControllerTest {
                 .andExpect(status().isOk());
     }
 
-    // =====================================================
-    // DELETE /api/athletes/{id}
-    // =====================================================
+    /* =====================================================
+       DELETE /api/athletes/{id}
+    ===================================================== */
     @Test
     @WithMockUser(roles = "ADMIN")
     void delete_shouldReturn200() throws Exception {
 
-        when(repo.existsById(1)).thenReturn(true);
+        when(repo.existsById(1))
+                .thenReturn(true);
 
         mockMvc.perform(delete("/api/athletes/1")
                         .with(csrf()))

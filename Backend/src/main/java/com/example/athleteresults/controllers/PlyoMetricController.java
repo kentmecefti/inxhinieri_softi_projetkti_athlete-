@@ -18,20 +18,20 @@ public class PlyoMetricController {
         this.plyoMetricRepository = plyoMetricRepository;
     }
 
-    
+    //  GET all plyometric metrics for a given gym session
     @GetMapping
     public List<PlyoMetric> getByGym(@RequestParam Integer gymId) {
         return plyoMetricRepository.findByGymSessionId(gymId);
     }
 
-    
+    //  POST create new plyometric metric
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public PlyoMetric create(@RequestBody PlyoMetric metric) {
         return plyoMetricRepository.save(metric);
     }
 
-    
+    //  DELETE a plyometric metric by ID
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {

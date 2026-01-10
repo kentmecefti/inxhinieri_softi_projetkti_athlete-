@@ -28,7 +28,7 @@ public class JumpResult {
     private Double distanceM;
 
     @Column(name = "notes")
-    private String notes;
+    private String notes;  //  new field added
 
     public JumpResult() {}
 

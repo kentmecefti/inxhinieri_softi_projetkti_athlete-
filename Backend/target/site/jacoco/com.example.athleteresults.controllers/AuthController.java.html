@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">AuthController.java</span></div><h1>AuthController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.*;
+import com.example.athleteresults.repositories.*;
+import com.example.athleteresults.security.JwtService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import jakarta.validation.Valid;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.example.athleteresults.dto.ChangePasswordRequest;
+
+
+import java.util.Set;
+
+@RestController
+@RequestMapping(&quot;/api/auth&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class AuthController {
+
+    private final AuthenticationManager authManager;
+    private final UserRepository userRepo;
+    private final RoleRepository roleRepo;
+    private final AthleteRepository athleteRepo;
+    private final CoachRepository coachRepo;
+    private final PasswordEncoder encoder;
+    private final JwtService jwtService;
+
+    // Allowed role names
+<span class="fc" id="L35">    private static final Set&lt;String&gt; VALID_ROLES = Set.of(&quot;ADMIN&quot;, &quot;DATA ANALYST&quot;, &quot;COACH&quot;, &quot;ATHLETE&quot;);</span>
+
+    public AuthController(AuthenticationManager authManager,
+                          UserRepository userRepo,
+                          RoleRepository roleRepo,
+                          AthleteRepository athleteRepo,
+                          CoachRepository coachRepo,
+                          PasswordEncoder encoder,
+<span class="fc" id="L43">                          JwtService jwtService) {</span>
+<span class="fc" id="L44">        this.authManager = authManager;</span>
+<span class="fc" id="L45">        this.userRepo = userRepo;</span>
+<span class="fc" id="L46">        this.roleRepo = roleRepo;</span>
+<span class="fc" id="L47">        this.athleteRepo = athleteRepo;</span>
+<span class="fc" id="L48">        this.coachRepo = coachRepo;</span>
+<span class="fc" id="L49">        this.encoder = encoder;</span>
+<span class="fc" id="L50">        this.jwtService = jwtService;</span>
+<span class="fc" id="L51">    }</span>
+
+    // ========================= REGISTER =========================
+    @PostMapping(&quot;/register&quot;)
+    public ResponseEntity&lt;?&gt; register(@RequestBody RegistrationRequest req) {
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (userRepo.existsByUsername(req.getUsername())) {</span>
+<span class="fc" id="L57">            throw new ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already exists&quot;);</span>
+        }
+
+        // Validate and normalize role
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        String roleName = (req.getRole() != null) ? req.getRole().trim().toUpperCase() : &quot;ATHLETE&quot;;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (!VALID_ROLES.contains(roleName)) {</span>
+<span class="nc" id="L63">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Invalid role: &quot; + roleName);</span>
+        }
+
+        // 1️⃣ Create user
+<span class="fc" id="L67">        User user = new User();</span>
+<span class="fc" id="L68">        user.setUsername(req.getUsername());</span>
+<span class="fc" id="L69">        user.setEmail(req.getEmail());</span>
+<span class="fc" id="L70">        user.setPassword(encoder.encode(req.getPassword()));</span>
+<span class="fc" id="L71">        User savedUser = userRepo.save(user);</span>
+
+        // 2️⃣ Assign role
+<span class="fc" id="L74">        Role role = new Role(roleName, savedUser);</span>
+<span class="fc" id="L75">        roleRepo.save(role);</span>
+
+        // 3️⃣ Auto-link based on role
+<span class="pc bpc" id="L78" title="2 of 3 branches missed.">        switch (roleName) {</span>
+            case &quot;ATHLETE&quot; -&gt; {
+<span class="fc" id="L80">                Athlete athlete = new Athlete();</span>
+<span class="fc" id="L81">                athlete.setName(savedUser.getUsername());</span>
+<span class="fc" id="L82">                athlete.setUser(savedUser);</span>
+<span class="fc" id="L83">                athleteRepo.save(athlete);</span>
+<span class="fc" id="L84">            }</span>
+            case &quot;COACH&quot; -&gt; {
+<span class="nc" id="L86">                Coach coach = new Coach();</span>
+<span class="nc" id="L87">                coach.setName(savedUser.getUsername());</span>
+<span class="nc" id="L88">                coach.setUser(savedUser);</span>
+<span class="nc" id="L89">                coachRepo.save(coach);</span>
+<span class="nc" id="L90">            }</span>
+            default -&gt; {
+                // For ADMIN or DATA ANALYST, no link to athlete/coach tables
+            }
+        }
+
+<span class="fc" id="L96">        return ResponseEntity.ok(&quot;✅ User registered successfully as &quot; + roleName);</span>
+    }
+
+    // ========================= LOGIN =========================
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;?&gt; login(@RequestBody User user) {
+        try {
+            // Try to authenticate first
+<span class="fc" id="L104">            Authentication auth = authManager.authenticate(</span>
+<span class="fc" id="L105">                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())</span>
+            );
+
+            // Retrieve full user entity
+<span class="fc" id="L109">            User foundUser = userRepo.findByUsername(user.getUsername())</span>
+<span class="pc" id="L110">                    .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+
+            // Check if user is active
+<span class="fc bfc" id="L113" title="All 2 branches covered.">            if (!foundUser.isActive()) {</span>
+<span class="fc" id="L114">                return ResponseEntity.status(HttpStatus.FORBIDDEN)</span>
+<span class="fc" id="L115">                        .body(&quot; User account is inactive. Please contact an administrator.&quot;);</span>
+            }
+
+            // Generate JWT token
+<span class="fc" id="L119">            String token = jwtService.generateToken(user.getUsername());</span>
+<span class="fc" id="L120">            return ResponseEntity.ok(token);</span>
+
+<span class="fc" id="L122">        } catch (BadCredentialsException ex) {</span>
+<span class="fc" id="L123">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="fc" id="L124">                    .body(&quot; Invalid username or password.&quot;);</span>
+<span class="nc" id="L125">        } catch (Exception ex) {</span>
+<span class="nc" id="L126">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L127">                    .body(&quot; Login failed: &quot; + ex.getMessage());</span>
+        }
+    }
+
+
+    // ========================= DTO CLASS =========================
+<span class="fc" id="L133">    public static class RegistrationRequest {</span>
+        private String username;
+        private String email;
+        private String password;
+        private String role;
+
+<span class="fc" id="L139">        public String getUsername() { return username; }</span>
+<span class="fc" id="L140">        public void setUsername(String username) { this.username = username; }</span>
+
+<span class="fc" id="L142">        public String getEmail() { return email; }</span>
+<span class="fc" id="L143">        public void setEmail(String email) { this.email = email; }</span>
+
+<span class="fc" id="L145">        public String getPassword() { return password; }</span>
+<span class="fc" id="L146">        public void setPassword(String password) { this.password = password; }</span>
+
+<span class="fc" id="L148">        public String getRole() { return role; }</span>
+<span class="fc" id="L149">        public void setRole(String role) { this.role = role; }</span>
+    }
+    // ========================= CHANGE PASSWORD =========================
+    @PutMapping(&quot;/change-password&quot;)
+    public ResponseEntity&lt;?&gt; changePassword(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @Valid @RequestBody ChangePasswordRequest req
+    ) {
+<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if (userDetails == null) {</span>
+<span class="nc" id="L158">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="nc" id="L159">                    .body(&quot;❌ Unauthorized&quot;);</span>
+        }
+
+<span class="fc" id="L162">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="pc" id="L163">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
+                        HttpStatus.NOT_FOUND, &quot;User not found&quot;));
+
+        // Check current password
+<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (!encoder.matches(req.getCurrentPassword(), user.getPassword())) {</span>
+<span class="fc" id="L168">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L169">                    .body(&quot;❌ Current password is incorrect&quot;);</span>
+        }
+
+        // Update password
+<span class="fc" id="L173">        user.setPassword(encoder.encode(req.getNewPassword()));</span>
+<span class="fc" id="L174">        userRepo.saveAndFlush(user);</span>
+
+<span class="fc" id="L176">        return ResponseEntity.ok(&quot;✅ Password changed successfully&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -28,36 +28,36 @@ public class ResultController {
         this.athleteRepo = athleteRepo;
     }
 
-    
+    // ===== GET — all results =====
     @GetMapping
     public List<Result> all() {
         return repo.findAll();
     }
 
-    
+    // ===== GET — results for a specific athlete =====
     @GetMapping("/athlete/{athleteId}")
     public List<Result> byAthlete(@PathVariable Integer athleteId) {
         return repo.findByAthleteId(athleteId);
     }
 
-    
+    // ===== GET — single result by ID =====
     @GetMapping("/{id}")
     public Result getById(@PathVariable Integer id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Result not found"));
     }
 
-    
+    // ===== POST — create new result =====
     @PostMapping
     public Result create(@RequestBody Result result) {
         if (!athleteRepo.existsById(result.getAthleteId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid athleteId");
         }
-        
+        // notes included in save
         return repo.save(result);
     }
 
-    
+    // ===== PUT — update existing result =====
     @PutMapping("/{id}")
     public Result update(@PathVariable Integer id, @RequestBody Result updated) {
         if (!athleteRepo.existsById(updated.getAthleteId())) {
@@ -73,13 +73,13 @@ public class ResultController {
                     r.setDistance(updated.getDistance());
                     r.setTimeMs(updated.getTimeMs());
                     r.setWeight(updated.getWeight());
-                    r.setNotes(updated.getNotes()); 
+                    r.setNotes(updated.getNotes()); // ✅ Added notes
                     return repo.save(r);
                 })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Result not found"));
     }
 
-    
+    // ===== DELETE — by ID =====
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         if (!repo.existsById(id)) {
@@ -89,7 +89,7 @@ public class ResultController {
         return "Deleted";
     }
 
-    
+    // ===== FILTER — default sort by date ascending =====
     @GetMapping("/filter")
     public List<Result> filterResults(
             @RequestParam(required = false) Integer athleteId,
@@ -104,7 +104,7 @@ public class ResultController {
         return repo.findAll(buildSpec(athleteId, race, raceType, distance, weight, from, to), sort);
     }
 
-    
+    // ===== SEARCH — supports dynamic sorting (time/date asc/desc) =====
     @GetMapping("/search")
     public List<Result> searchResults(
             @RequestParam(required = false) Integer athleteId,
@@ -134,7 +134,7 @@ public class ResultController {
         return repo.findAll(buildSpec(athleteId, race, raceType, distance, weight, fromDate, toDate), sort);
     }
 
-    
+    // ===== Helper — dynamic Specification builder =====
     private Specification<Result> buildSpec(
             Integer athleteId, String race, String raceType,
             Integer distance, Integer weight, LocalDate from, LocalDate to

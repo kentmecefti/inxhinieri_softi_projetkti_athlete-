@@ -15,6 +15,7 @@ public class GymSession {
     @Column(name = "gym_id")
     private Integer id;
 
+    // ✅ Fix: prevent Lazy proxy serialization problems
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "athlete_id", nullable = false, referencedColumnName = "athlete_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // <-- IMPORTANT
@@ -32,7 +33,8 @@ public class GymSession {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    //Lidhjet
+    // ===== RELATIONSHIPS =====
+    // ✅ Fix: prevent recursive / lazy serialization crashes
     @OneToMany(mappedBy = "gymSession", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<WeightMetric> weightMetrics;
@@ -47,7 +49,7 @@ public class GymSession {
 
     public GymSession() {}
 
-    //Getters and Setters
+    // ===== GETTERS & SETTERS =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

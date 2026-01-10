@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JumpResultController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">JumpResultController.java</span></div><h1>JumpResultController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.JumpResult;
+import com.example.athleteresults.repositories.AthleteRepository;
+import com.example.athleteresults.repositories.JumpResultRepository;
+import jakarta.persistence.criteria.Predicate;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/jumpresults&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class JumpResultController {
+
+    private final JumpResultRepository repo;
+    private final AthleteRepository athleteRepo;
+
+<span class="fc" id="L25">    public JumpResultController(JumpResultRepository repo, AthleteRepository athleteRepo) {</span>
+<span class="fc" id="L26">        this.repo = repo;</span>
+<span class="fc" id="L27">        this.athleteRepo = athleteRepo;</span>
+<span class="fc" id="L28">    }</span>
+
+    /* =====================================================
+       GET ALL
+    ===================================================== */
+    @GetMapping
+    public List&lt;JumpResult&gt; all() {
+<span class="fc" id="L35">        return repo.findAll();</span>
+    }
+
+    /* =====================================================
+       GET BY ATHLETE
+    ===================================================== */
+    @GetMapping(&quot;/athlete/{athleteId}&quot;)
+    public List&lt;JumpResult&gt; byAthlete(@PathVariable Integer athleteId) {
+<span class="fc" id="L43">        return repo.findByAthleteId(athleteId);</span>
+    }
+
+    /* =====================================================
+       GET BY ID
+    ===================================================== */
+    @GetMapping(&quot;/{id}&quot;)
+    public JumpResult byId(@PathVariable Integer id) {
+<span class="fc" id="L51">        return repo.findById(id)</span>
+<span class="fc" id="L52">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
+                        HttpStatus.NOT_FOUND,
+                        &quot;Jump result not found with ID: &quot; + id
+                ));
+    }
+
+    /* =====================================================
+       CREATE
+    ===================================================== */
+    @PostMapping
+    public JumpResult create(@RequestBody JumpResult newJump) {
+<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (!athleteRepo.existsById(newJump.getAthleteId())) {</span>
+<span class="fc" id="L64">            throw new ResponseStatusException(</span>
+                    HttpStatus.BAD_REQUEST,
+<span class="fc" id="L66">                    &quot;Athlete not found with ID: &quot; + newJump.getAthleteId()</span>
+            );
+        }
+<span class="fc" id="L69">        return repo.save(newJump);</span>
+    }
+
+    /* =====================================================
+       UPDATE
+    ===================================================== */
+    @PutMapping(&quot;/{id}&quot;)
+    public JumpResult update(@PathVariable Integer id, @RequestBody JumpResult data) {
+<span class="fc" id="L77">        return repo.findById(id).map(jump -&gt; {</span>
+<span class="fc" id="L78">            jump.setJumpDate(data.getJumpDate());</span>
+<span class="fc" id="L79">            jump.setJumpType(data.getJumpType());</span>
+<span class="fc" id="L80">            jump.setDetail(data.getDetail());</span>
+<span class="fc" id="L81">            jump.setDistanceM(data.getDistanceM());</span>
+<span class="fc" id="L82">            jump.setAthleteId(data.getAthleteId());</span>
+<span class="fc" id="L83">            jump.setNotes(data.getNotes());</span>
+<span class="fc" id="L84">            return repo.save(jump);</span>
+<span class="fc" id="L85">        }).orElseThrow(() -&gt; new ResponseStatusException(</span>
+                HttpStatus.NOT_FOUND,
+                &quot;Jump result not found with ID: &quot; + id
+        ));
+    }
+
+    /* =====================================================
+       DELETE
+    ===================================================== */
+    @DeleteMapping(&quot;/{id}&quot;)
+    public String delete(@PathVariable Integer id) {
+<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (!repo.existsById(id)) {</span>
+<span class="nc" id="L97">            throw new ResponseStatusException(</span>
+                    HttpStatus.NOT_FOUND,
+                    &quot;Jump result not found with ID: &quot; + id
+            );
+        }
+<span class="fc" id="L102">        repo.deleteById(id);</span>
+<span class="fc" id="L103">        return &quot;iku&quot;;</span>
+    }
+
+    /* =====================================================
+       FILTER
+    ===================================================== */
+    @GetMapping(&quot;/filter&quot;)
+    public List&lt;JumpResult&gt; filterJumps(
+            @RequestParam(required = false) Integer athleteId,
+            @RequestParam(required = false) String jumpType,
+            @RequestParam(required = false) String detail,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+<span class="fc" id="L119">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to),</span>
+<span class="fc" id="L120">                Sort.by(&quot;jumpDate&quot;).ascending());</span>
+    }
+
+    /* =====================================================
+       SEARCH
+    ===================================================== */
+    @GetMapping(&quot;/search&quot;)
+    public List&lt;JumpResult&gt; searchJumps(
+            @RequestParam(required = false) Integer athleteId,
+            @RequestParam(required = false) String jumpType,
+            @RequestParam(required = false) String detail,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to,
+            @RequestParam(defaultValue = &quot;date&quot;) String sortBy,
+            @RequestParam(defaultValue = &quot;asc&quot;) String sortOrder
+    ) {
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        Sort sort = sortBy.equalsIgnoreCase(&quot;distancem&quot;)</span>
+<span class="fc" id="L139">                ? Sort.by(&quot;distanceM&quot;)</span>
+<span class="pc" id="L140">                : Sort.by(&quot;jumpDate&quot;);</span>
+
+<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        sort = sortOrder.equalsIgnoreCase(&quot;desc&quot;) ? sort.descending() : sort.ascending();</span>
+
+<span class="fc" id="L144">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to), sort);</span>
+    }
+
+    /* =====================================================
+       SPECIFICATION
+    ===================================================== */
+    private Specification&lt;JumpResult&gt; buildSpec(
+            Integer athleteId, String jumpType, String detail,
+            LocalDate from, LocalDate to
+    ) {
+<span class="fc" id="L154">        return (root, query, cb) -&gt; {</span>
+<span class="nc" id="L155">            Predicate p = cb.conjunction();</span>
+
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if (athleteId != null)</span>
+<span class="nc" id="L158">                p = cb.and(p, cb.equal(root.get(&quot;athleteId&quot;), athleteId));</span>
+
+<span class="nc bnc" id="L160" title="All 4 branches missed.">            if (jumpType != null &amp;&amp; !jumpType.isEmpty())</span>
+<span class="nc" id="L161">                p = cb.and(p,</span>
+<span class="nc" id="L162">                        cb.like(cb.lower(root.get(&quot;jumpType&quot;)),</span>
+<span class="nc" id="L163">                                &quot;%&quot; + jumpType.toLowerCase() + &quot;%&quot;));</span>
+
+<span class="nc bnc" id="L165" title="All 4 branches missed.">            if (detail != null &amp;&amp; !detail.isEmpty())</span>
+<span class="nc" id="L166">                p = cb.and(p,</span>
+<span class="nc" id="L167">                        cb.like(cb.lower(root.get(&quot;detail&quot;)),</span>
+<span class="nc" id="L168">                                &quot;%&quot; + detail.toLowerCase() + &quot;%&quot;));</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (from != null)</span>
+<span class="nc" id="L171">                p = cb.and(p, cb.greaterThanOrEqualTo(root.get(&quot;jumpDate&quot;), from));</span>
+
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (to != null)</span>
+<span class="nc" id="L174">                p = cb.and(p, cb.lessThan(root.get(&quot;jumpDate&quot;), to.plusDays(1)));</span>
+
+<span class="nc" id="L176">            return p;</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

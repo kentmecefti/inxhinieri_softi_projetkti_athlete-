@@ -27,7 +27,7 @@ public class PlyoMetric {
     @Column
     private Integer intensity;
 
-    //Getters dhe Setters
+    // ===== GETTERS & SETTERS =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

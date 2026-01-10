@@ -1,6 +1,7 @@
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\AthleteResultsApiApplication.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\AthleteController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\AuthController.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\CoachAthleteRelationController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\CoachController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\GymSessionController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\JumpResultController.java
@@ -12,9 +13,10 @@ C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\ThrowResultController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\UserController.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\controllers\WeightMetricController.java
-C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\dto\UserDto.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\dto\ChangePasswordRequest.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Athlete.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Coach.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\CoachAthleteRelation.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\GymSession.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\JumpResult.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Plan.java
@@ -23,10 +25,12 @@ C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Result.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Role.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Session.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\Status.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\ThrowResult.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\User.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\entities\WeightMetric.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\AthleteRepository.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\CoachAthleteRelationRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\CoachRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\GymSessionRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\JumpResultRepository.java
@@ -36,6 +40,7 @@ C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\ResultRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\RoleRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\SessionRepository.java
+C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\StatusRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\ThrowResultRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\UserRepository.java
 C:\Users\User\Desktop\athlete-results-pg azure\AthleteTracker\src\main\java\com\example\athleteresults\repositories\WeightMetricRepository.java

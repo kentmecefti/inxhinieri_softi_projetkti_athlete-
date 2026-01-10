@@ -3,7 +3,7 @@ package com.example.athleteresults.entities;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // ✅ prevents lazy proxy issues
 @Entity
 @Table(name = "weight_metrics")
 public class WeightMetric {
@@ -15,7 +15,7 @@ public class WeightMetric {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gym_id", nullable = false)
-    @JsonIgnoreProperties({"weightMetrics", "plyoMetrics", "reflexMetrics", "athlete"})
+    @JsonIgnoreProperties({"weightMetrics", "plyoMetrics", "reflexMetrics", "athlete"}) // ✅ avoid recursion
     private GymSession gymSession;
 
     @Column
@@ -27,7 +27,7 @@ public class WeightMetric {
     @Column(name = "weight_gym")
     private Double weightGym;
 
-    //Getters dhe Setters
+    // ===== GETTERS & SETTERS =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

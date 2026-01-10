@@ -1,0 +1,24 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+athlete-results-pg,com.example.athleteresults,WebConfig.new WebMvcConfigurer() {...},0,52,0,0,0,6,0,2,0,2
+athlete-results-pg,com.example.athleteresults,WebConfig,0,8,0,0,0,2,0,2,0,2
+athlete-results-pg,com.example.athleteresults.controllers,AuthController,49,203,5,10,11,49,7,8,2,5
+athlete-results-pg,com.example.athleteresults.controllers,AuthController.RegistrationRequest,0,31,0,0,0,9,0,9,0,9
+athlete-results-pg,com.example.athleteresults.controllers,AthleteController,311,314,36,26,34,69,40,11,11,9
+athlete-results-pg,com.example.athleteresults.controllers,WeightMetricController,0,33,0,2,0,9,0,5,0,4
+athlete-results-pg,com.example.athleteresults.controllers,PlyoMetricController,0,33,0,2,0,9,0,5,0,4
+athlete-results-pg,com.example.athleteresults.controllers,PlanController.ActualOnly,0,6,0,0,0,1,0,1,0,1
+athlete-results-pg,com.example.athleteresults.controllers,GymSessionController,9,165,16,20,0,29,16,14,0,12
+athlete-results-pg,com.example.athleteresults.controllers,PlanController.PlanRequest,0,21,0,0,0,1,0,1,0,1
+athlete-results-pg,com.example.athleteresults.controllers,PlanController,119,271,11,3,15,70,18,12,11,12
+athlete-results-pg,com.example.athleteresults.controllers,ResultController,127,195,21,7,15,36,14,14,2,12
+athlete-results-pg,com.example.athleteresults.controllers,ReflexMetricController,0,33,0,2,0,9,0,5,0,4
+athlete-results-pg,com.example.athleteresults.controllers,SessionController,0,138,2,10,0,30,2,12,0,8
+athlete-results-pg,com.example.athleteresults.controllers,ThrowResultController,116,214,25,11,19,40,17,15,1,13
+athlete-results-pg,com.example.athleteresults.controllers,PlanController.SendPlanRequest,0,18,0,0,0,1,0,1,0,1
+athlete-results-pg,com.example.athleteresults.controllers,PlanController.PlanDTO,4,72,4,4,0,11,4,2,0,2
+athlete-results-pg,com.example.athleteresults.controllers,CoachController,692,424,44,18,104,87,52,12,25,8
+athlete-results-pg,com.example.athleteresults.controllers,JumpResultController,97,174,17,5,17,32,11,14,1,13
+athlete-results-pg,com.example.athleteresults.controllers,UserController,196,259,23,13,27,58,27,14,10,13
+athlete-results-pg,com.example.athleteresults.controllers,CoachAthleteRelationController,18,330,0,10,0,60,3,22,3,17
+athlete-results-pg,com.example.athleteresults.services,PlanService,5,59,0,4,1,15,1,9,1,7
+athlete-results-pg,com.example.athleteresults.services,CustomUserDetailsService,0,21,0,0,0,5,0,3,0,3

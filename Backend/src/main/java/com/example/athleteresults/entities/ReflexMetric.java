@@ -27,7 +27,7 @@ public class ReflexMetric {
     @Column(name = "best_trial_ms")
     private Integer bestTrialMs;
 
-    //Getters dhe Setters
+    // ===== GETTERS & SETTERS =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

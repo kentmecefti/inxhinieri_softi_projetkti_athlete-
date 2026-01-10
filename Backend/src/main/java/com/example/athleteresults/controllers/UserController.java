@@ -5,6 +5,7 @@ import com.example.athleteresults.repositories.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -22,7 +23,7 @@ public class UserController {
     private final AthleteRepository athleteRepo;
     private final CoachRepository coachRepo;
 
-    
+    // 🔹 Allowed role names
     private static final Set<String> VALID_ROLES = Set.of("ADMIN", "DATA ANALYST", "COACH", "ATHLETE");
 
     public UserController(UserRepository userRepo,
@@ -36,17 +37,24 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
-    
+    // ===== Get all users =====
     @GetMapping
     public List<User> all() {
         return userRepo.findAll();
     }
-    
-    @PreAuthorize("isAuthenticated()")
+    // ===== Get user by ID =====
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable Integer id, Authentication auth) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<User> getById(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails
+    ) {
 
-        User requester = userRepo.findByUsername(auth.getName())
+        if (userDetails == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+
+        User requester = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
         boolean isAdmin = requester.getRoles().stream()
@@ -56,9 +64,13 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Not allowed");
         }
 
-        requester.setPassword(null);
-        return ResponseEntity.ok(requester);
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        user.setPassword(null);
+        return ResponseEntity.ok(user);
     }
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -68,17 +80,17 @@ public class UserController {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
 
-        
+        // Save user first
         User savedUser = userRepo.save(user);
 
-        
+        // Assign roles
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             Role defaultRole = new Role("ATHLETE", savedUser);
             roleRepo.save(defaultRole);
 
             Athlete athlete = new Athlete();
             athlete.setName(savedUser.getUsername());
-            athlete.setUserId(savedUser.getId()); 
+            athlete.setUserId(savedUser.getId()); // ✅ directly set user_id
             athleteRepo.save(athlete);
         } else {
             for (Role r : user.getRoles()) {
@@ -106,7 +118,7 @@ public class UserController {
         return savedUser;
     }
 
-    
+    // ===== Update user =====
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public User updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
@@ -117,7 +129,7 @@ public class UserController {
         existing.setEmail(updatedUser.getEmail());
         if (updatedUser.getPassword() != null) existing.setPassword(updatedUser.getPassword());
 
-        
+        // Update roles if provided
         if (updatedUser.getRoles() != null && !updatedUser.getRoles().isEmpty()) {
             roleRepo.deleteAll(roleRepo.findByUserId(id));
 
@@ -135,7 +147,7 @@ public class UserController {
         return userRepo.save(existing);
     }
 
-    
+    // ===== Delete user =====
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable Integer id) {
@@ -145,18 +157,18 @@ public class UserController {
         boolean isCoach = user.getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("COACH"));
         boolean isAthlete = user.getRoles().stream().anyMatch(r -> r.getName().equalsIgnoreCase("ATHLETE"));
 
-        
+        // Delete linked records
         if (isCoach) coachRepo.findByUserId(id).ifPresent(coach -> coachRepo.deleteById(coach.getId()));
         if (isAthlete) athleteRepo.findByUserId(id).ifPresent(athlete -> athleteRepo.deleteById(athlete.getId()));
 
-        
+        // Delete roles + user
         roleRepo.deleteAll(roleRepo.findByUserId(id));
         userRepo.deleteById(id);
 
         return " User and linked data deleted successfully.";
     }
 
-    
+    // In UserController.java
     @GetMapping("/by-username/{username}")
     public ResponseEntity<User> getByUsername(@PathVariable String username) {
         User user = userRepo.findByUsername(username)
@@ -165,7 +177,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    
+    // ===== ACTIVATE / DEACTIVATE USER =====
     @PutMapping("/{id}/activate")
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> activateUser(@PathVariable Integer id) {

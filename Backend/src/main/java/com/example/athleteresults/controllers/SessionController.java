@@ -21,13 +21,13 @@ public class SessionController {
         this.repo = repo;
     }
 
-    
+    // Get all sessions
     @GetMapping
     public List<Session> all() {
         return repo.findAll();
     }
 
-    
+    // Get sessions by athlete (optional date filter)
     @GetMapping("/athlete/{athleteId}")
     public List<Session> byAthlete(
             @PathVariable Integer athleteId,
@@ -40,14 +40,14 @@ public class SessionController {
         return repo.findByAthleteIdOrderByRunDateDesc(athleteId);
     }
 
-    
+    // Get one session by ID
     @GetMapping("/{id}")
     public Session get(@PathVariable Integer id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found"));
     }
 
-    
+    // Create new session
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Session create(@RequestBody Session session) {
@@ -57,7 +57,7 @@ public class SessionController {
         return repo.save(session);
     }
 
-    
+    //  Update session
     @PutMapping("/{id}")
     public Session update(@PathVariable Integer id, @RequestBody Session updated) {
         Optional<Session> existing = repo.findById(id);
@@ -76,7 +76,7 @@ public class SessionController {
         return repo.save(s);
     }
 
-    
+    //  Delete session with message
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         if (!repo.existsById(id)) {

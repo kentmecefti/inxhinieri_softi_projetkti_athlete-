@@ -7,9 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -20,10 +18,14 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // 🔥 NEW — REQUIRED
+    @Column(name = "public_id", nullable = false, unique = true, updatable = false)
+    private String publicId;
+
     @Column(nullable = false, unique = true)
     private String username;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = true)
     private String password;
 
     @Column(unique = true)
@@ -35,12 +37,22 @@ public class User implements UserDetails {
     @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private boolean active = true;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL,
-            orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.EAGER)
     @JsonManagedReference
     private Set<Role> roles = new HashSet<>();
 
-    //Metodat ndihmese
+    // 🔥 NEW — AUTO GENERATE public_id
+    @PrePersist
+    private void generatePublicId() {
+        if (this.publicId == null) {
+            this.publicId = UUID.randomUUID().toString();
+        }
+    }
+
+    // ===== CONVENIENCE METHODS =====
     public void addRole(Role role) {
         roles.add(role);
         role.setUser(this);
@@ -51,6 +63,7 @@ public class User implements UserDetails {
         if (roles != null) roles.forEach(this::addRole);
     }
 
+    // ===== UserDetails =====
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
@@ -61,12 +74,14 @@ public class User implements UserDetails {
     @Override public boolean isAccountNonExpired() { return true; }
     @Override public boolean isAccountNonLocked() { return true; }
     @Override public boolean isCredentialsNonExpired() { return true; }
-
     @Override public boolean isEnabled() { return active; }
 
-    //Konstruktoret
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public String getPublicId() { return publicId; }
+    public void setPublicId(String publicId) { this.publicId = publicId; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

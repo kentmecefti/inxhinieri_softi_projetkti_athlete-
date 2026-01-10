@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoachAthleteRelationController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">CoachAthleteRelationController.java</span></div><h1>CoachAthleteRelationController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.*;
+import com.example.athleteresults.repositories.*;
+import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+@RestController
+@RequestMapping(&quot;/api/relations&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class CoachAthleteRelationController {
+
+    private final CoachRepository coachRepo;
+    private final AthleteRepository athleteRepo;
+    private final CoachAthleteRelationRepository relationRepo;
+    private final StatusRepository statusRepo;
+    private final UserRepository userRepo;
+
+    public CoachAthleteRelationController(CoachRepository coachRepo,
+                                          AthleteRepository athleteRepo,
+                                          CoachAthleteRelationRepository relationRepo,
+                                          StatusRepository statusRepo,
+<span class="fc" id="L26">                                          UserRepository userRepo) {</span>
+<span class="fc" id="L27">        this.coachRepo = coachRepo;</span>
+<span class="fc" id="L28">        this.athleteRepo = athleteRepo;</span>
+<span class="fc" id="L29">        this.relationRepo = relationRepo;</span>
+<span class="fc" id="L30">        this.statusRepo = statusRepo;</span>
+<span class="fc" id="L31">        this.userRepo = userRepo;</span>
+<span class="fc" id="L32">    }</span>
+
+    // ===== SEND REQUEST (Coach → Athlete) =====
+    @PostMapping(&quot;/request&quot;)
+    public ResponseEntity&lt;String&gt; sendRequest(
+            @RequestParam Integer coachId,
+            @RequestParam Integer athleteId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+        // ✅ Validate authentication
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (userDetails == null)</span>
+<span class="fc" id="L43">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Not logged in&quot;);</span>
+
+        // ✅ Fetch current user and linked coach
+<span class="fc" id="L46">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="fc" id="L47">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+<span class="fc" id="L48">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="fc" id="L49">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+        // 🔒 Security check: only the logged-in coach can send his own requests
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (!coach.getUserId().equals(user.getId())) {</span>
+<span class="fc" id="L53">            throw new ResponseStatusException(HttpStatus.FORBIDDEN,</span>
+                    &quot;Backend refused: this coach ID doesn't match your login.&quot;);
+        }
+
+        // ✅ Fetch athlete
+<span class="fc" id="L58">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="fc" id="L59">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+        // ✅ Prevent duplicates
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (relationRepo.findByCoachAndAthlete(coach, athlete).isPresent()) {</span>
+<span class="fc" id="L63">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="fc" id="L64">                    .body(&quot;Relation already exists or pending&quot;);</span>
+        }
+
+        // ✅ Create pending status
+<span class="fc" id="L68">        Status pending = statusRepo.findByStatusName(&quot;pending&quot;)</span>
+<span class="fc" id="L69">                .orElseGet(() -&gt; statusRepo.save(new Status(&quot;pending&quot;)));</span>
+
+        // ✅ Save new relation
+<span class="fc" id="L72">        CoachAthleteRelation rel = new CoachAthleteRelation(coach, athlete, pending);</span>
+<span class="fc" id="L73">        relationRepo.save(rel);</span>
+
+<span class="fc" id="L75">        return ResponseEntity.ok(&quot;Link request sent successfully!&quot;);</span>
+    }
+
+    // ===== ACCEPT REQUEST (Athlete → Accept) =====
+    @PostMapping(&quot;/accept&quot;)
+    public ResponseEntity&lt;String&gt; acceptRequest(
+            @RequestParam Integer athleteId,
+            @RequestParam Integer coachId) {
+
+<span class="fc" id="L84">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="fc" id="L85">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+<span class="fc" id="L86">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="fc" id="L87">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="fc" id="L89">        CoachAthleteRelation relation = relationRepo.findByCoachAndAthlete(coach, athlete)</span>
+<span class="fc" id="L90">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Request not found&quot;));</span>
+
+<span class="fc" id="L92">        Status accept = statusRepo.findByStatusName(&quot;accept&quot;)</span>
+<span class="fc" id="L93">                .orElseGet(() -&gt; statusRepo.save(new Status(&quot;accept&quot;)));</span>
+<span class="fc" id="L94">        relation.setStatus(accept);</span>
+<span class="fc" id="L95">        relationRepo.save(relation);</span>
+
+<span class="fc" id="L97">        return ResponseEntity.ok(&quot;Request accepted successfully!&quot;);</span>
+    }
+
+    // ===== REFUSE REQUEST (Athlete → Refuse) =====
+    @PostMapping(&quot;/refuse&quot;)
+    public ResponseEntity&lt;String&gt; refuseRequest(
+            @RequestParam Integer athleteId,
+            @RequestParam Integer coachId) {
+
+<span class="fc" id="L106">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="pc" id="L107">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+<span class="fc" id="L108">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="pc" id="L109">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="fc" id="L111">        CoachAthleteRelation relation = relationRepo.findByCoachAndAthlete(coach, athlete)</span>
+<span class="pc" id="L112">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Request not found&quot;));</span>
+
+<span class="fc" id="L114">        Status refuse = statusRepo.findByStatusName(&quot;refuse&quot;)</span>
+<span class="fc" id="L115">                .orElseGet(() -&gt; statusRepo.save(new Status(&quot;refuse&quot;)));</span>
+<span class="fc" id="L116">        relation.setStatus(refuse);</span>
+<span class="fc" id="L117">        relationRepo.save(relation);</span>
+
+<span class="fc" id="L119">        return ResponseEntity.ok(&quot;Request refused.&quot;);</span>
+    }
+    @DeleteMapping(&quot;/unlink&quot;)
+    public ResponseEntity&lt;String&gt; unlinkCoachFromAthlete(
+            @RequestParam Integer coachId,
+            @RequestParam Integer athleteId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (userDetails == null)</span>
+<span class="fc" id="L128">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Not logged in&quot;);</span>
+
+        // Logged user must be the athlete
+<span class="fc" id="L131">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="fc" id="L132">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+
+<span class="fc" id="L134">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="fc" id="L135">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (!athlete.getUserId().equals(user.getId())) {</span>
+<span class="fc" id="L138">            throw new ResponseStatusException(HttpStatus.FORBIDDEN,</span>
+                    &quot;You cannot unlink another athlete's coach.&quot;);
+        }
+
+<span class="fc" id="L142">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="fc" id="L143">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+<span class="fc" id="L145">        relationRepo.findByCoachAndAthlete(coach, athlete)</span>
+<span class="fc" id="L146">                .ifPresent(relationRepo::delete);</span>
+
+<span class="fc" id="L148">        return ResponseEntity.ok(&quot;Coach removed successfully&quot;);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

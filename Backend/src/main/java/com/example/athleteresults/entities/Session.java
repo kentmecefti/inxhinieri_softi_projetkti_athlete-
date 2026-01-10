@@ -43,7 +43,7 @@ public class Session {
     @Column(columnDefinition = "TEXT")
     private String notes;
 
-    //Konstruktoret
+    // ===== Constructors =====
     public Session() {}
 
     public Session(Integer athleteId, LocalDate runDate, BigDecimal timeMin, BigDecimal distanceKm,
@@ -61,7 +61,7 @@ public class Session {
         this.notes = notes;
     }
 
-    //Getters dhe Setters
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

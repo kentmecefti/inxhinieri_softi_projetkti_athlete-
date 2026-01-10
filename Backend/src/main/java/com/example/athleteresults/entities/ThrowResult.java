@@ -51,7 +51,7 @@ public class ThrowResult {
         this.throwStyle = throwStyle;
     }
 
-    //Getters dhe Setters
+    // ====== GETTERS & SETTERS ======
     public Integer getId() { return id; }
 
     public Athlete getAthlete() { return athlete; }

@@ -1,0 +1,39 @@
+-------------------------------------------------------------------------------
+Test set: com.example.athleteresults.controllers.AthletePublicApiTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 5, Skipped: 0, Time elapsed: 20.94 s <<< FAILURE! -- in com.example.athleteresults.controllers.AthletePublicApiTest
+com.example.athleteresults.controllers.AthletePublicApiTest.athlete_can_get_self -- Time elapsed: 0.422 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void com.example.athleteresults.entities.User.setRoles(java.lang.String)'
+	at com.example.athleteresults.controllers.AthletePublicApiTest.setup(AthletePublicApiTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.athleteresults.controllers.AthletePublicApiTest.coach_not_linked_cannot_get_athlete -- Time elapsed: 0.016 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void com.example.athleteresults.entities.User.setRoles(java.lang.String)'
+	at com.example.athleteresults.controllers.AthletePublicApiTest.setup(AthletePublicApiTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.athleteresults.controllers.AthletePublicApiTest.athlete_cannot_delete -- Time elapsed: 0.016 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void com.example.athleteresults.entities.User.setRoles(java.lang.String)'
+	at com.example.athleteresults.controllers.AthletePublicApiTest.setup(AthletePublicApiTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.athleteresults.controllers.AthletePublicApiTest.admin_can_get_athlete -- Time elapsed: 0.010 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void com.example.athleteresults.entities.User.setRoles(java.lang.String)'
+	at com.example.athleteresults.controllers.AthletePublicApiTest.setup(AthletePublicApiTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+com.example.athleteresults.controllers.AthletePublicApiTest.coach_linked_can_get_athlete -- Time elapsed: 0.016 s <<< ERROR!
+java.lang.NoSuchMethodError: 'void com.example.athleteresults.entities.User.setRoles(java.lang.String)'
+	at com.example.athleteresults.controllers.AthletePublicApiTest.setup(AthletePublicApiTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

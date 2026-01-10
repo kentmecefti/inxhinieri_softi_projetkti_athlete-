@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
@@ -16,6 +17,9 @@ public class Athlete {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "athlete_id")
     private Integer id;
+
+    @Column(name = "public_id", nullable = false, unique = true, updatable = false)
+    private String publicId;
 
     @Column(nullable = false)
     private String name;
@@ -41,6 +45,7 @@ public class Athlete {
     @Column
     private String category;
 
+    // ✅ Renamed: status → performance
     @Column(name = "performance")
     private String performance;
 
@@ -56,20 +61,28 @@ public class Athlete {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
+    // ===== Relation to Users =====
     @Column(name = "user_id")
     private Integer userId;
 
-    //Many-to-Many relation me trajneret
+    // ===== Many-to-Many with Coaches =====
     @ManyToMany(mappedBy = "athletes")
     @JsonIgnore
     private Set<Coach> coaches = new HashSet<>();
 
-    //Relation me CoachAthleteRelation
+    @PrePersist
+    private void generatePublicId() {
+        if (this.publicId == null) {
+            this.publicId = UUID.randomUUID().toString();
+        }
+    }
+
+    // ===== Relation with CoachAthleteRelation =====
     @OneToMany(mappedBy = "athlete", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<CoachAthleteRelation> coachAthleteRelations = new HashSet<>();
 
-    //Konstruktoret
+    // ===== Constructors =====
     public Athlete() {}
 
     public Athlete(Integer id, String name) {
@@ -84,7 +97,8 @@ public class Athlete {
         this.userId = userId;
         this.coaches = coaches;
     }
-    //Getters dhe Setters
+
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -112,6 +126,7 @@ public class Athlete {
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
 
+    //  Updated accessors
     public String getPerformance() { return performance; }
     public void setPerformance(String performance) { this.performance = performance; }
 
@@ -136,7 +151,14 @@ public class Athlete {
     public Set<CoachAthleteRelation> getCoachAthleteRelations() { return coachAthleteRelations; }
     public void setCoachAthleteRelations(Set<CoachAthleteRelation> coachAthleteRelations) { this.coachAthleteRelations = coachAthleteRelations; }
 
-    //Lidh atletin me nje user te ruajtur
+    public String getPublicId() {
+        return publicId;
+    }
+    // optional but recommended
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+    // ===== Link Athlete to a Saved User =====
     public void setUser(User savedUser) {
         if (savedUser != null) {
             this.userId = savedUser.getId();

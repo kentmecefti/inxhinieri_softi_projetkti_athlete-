@@ -15,4 +15,7 @@ public interface AthleteRepository extends JpaRepository<Athlete, Integer> {
     // 🔗 Find athlete by linked user_id
     Optional<Athlete> findByUserId(Integer userId);
 
+    // 🌍 Find athlete by PUBLIC ID (safe for frontend / URLs)
+    Optional<Athlete> findByPublicId(String publicId);
+
 }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ResultController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">ResultController.java</span></div><h1>ResultController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.Result;
+import com.example.athleteresults.repositories.ResultRepository;
+import com.example.athleteresults.repositories.AthleteRepository;
+
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDate;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/results&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class ResultController {
+
+    private final ResultRepository repo;
+    private final AthleteRepository athleteRepo;
+
+<span class="fc" id="L26">    public ResultController(ResultRepository repo, AthleteRepository athleteRepo) {</span>
+<span class="fc" id="L27">        this.repo = repo;</span>
+<span class="fc" id="L28">        this.athleteRepo = athleteRepo;</span>
+<span class="fc" id="L29">    }</span>
+
+    // ===== GET — all results =====
+    @GetMapping
+    public List&lt;Result&gt; all() {
+<span class="fc" id="L34">        return repo.findAll();</span>
+    }
+
+    // ===== GET — results for a specific athlete =====
+    @GetMapping(&quot;/athlete/{athleteId}&quot;)
+    public List&lt;Result&gt; byAthlete(@PathVariable Integer athleteId) {
+<span class="fc" id="L40">        return repo.findByAthleteId(athleteId);</span>
+    }
+
+    // ===== GET — single result by ID =====
+    @GetMapping(&quot;/{id}&quot;)
+    public Result getById(@PathVariable Integer id) {
+<span class="fc" id="L46">        return repo.findById(id)</span>
+<span class="fc" id="L47">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Result not found&quot;));</span>
+    }
+
+    // ===== POST — create new result =====
+    @PostMapping
+    public Result create(@RequestBody Result result) {
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (!athleteRepo.existsById(result.getAthleteId())) {</span>
+<span class="fc" id="L54">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Invalid athleteId&quot;);</span>
+        }
+        // notes included in save
+<span class="fc" id="L57">        return repo.save(result);</span>
+    }
+
+    // ===== PUT — update existing result =====
+    @PutMapping(&quot;/{id}&quot;)
+    public Result update(@PathVariable Integer id, @RequestBody Result updated) {
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">        if (!athleteRepo.existsById(updated.getAthleteId())) {</span>
+<span class="nc" id="L64">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Invalid athleteId&quot;);</span>
+        }
+
+<span class="fc" id="L67">        return repo.findById(id)</span>
+<span class="fc" id="L68">                .map(r -&gt; {</span>
+<span class="fc" id="L69">                    r.setAthleteId(updated.getAthleteId());</span>
+<span class="fc" id="L70">                    r.setRace(updated.getRace());</span>
+<span class="fc" id="L71">                    r.setRaceType(updated.getRaceType());</span>
+<span class="fc" id="L72">                    r.setRaceDate(updated.getRaceDate());</span>
+<span class="fc" id="L73">                    r.setDistance(updated.getDistance());</span>
+<span class="fc" id="L74">                    r.setTimeMs(updated.getTimeMs());</span>
+<span class="fc" id="L75">                    r.setWeight(updated.getWeight());</span>
+<span class="fc" id="L76">                    r.setNotes(updated.getNotes()); // ✅ Added notes</span>
+<span class="fc" id="L77">                    return repo.save(r);</span>
+                })
+<span class="pc" id="L79">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Result not found&quot;));</span>
+    }
+
+    // ===== DELETE — by ID =====
+    @DeleteMapping(&quot;/{id}&quot;)
+    public String delete(@PathVariable Integer id) {
+<span class="fc bfc" id="L85" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L86">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Result not found&quot;);</span>
+        }
+<span class="fc" id="L88">        repo.deleteById(id);</span>
+<span class="fc" id="L89">        return &quot;Deleted&quot;;</span>
+    }
+
+    // ===== FILTER — default sort by date ascending =====
+    @GetMapping(&quot;/filter&quot;)
+    public List&lt;Result&gt; filterResults(
+            @RequestParam(required = false) Integer athleteId,
+            @RequestParam(required = false) String race,
+            @RequestParam(required = false) String raceType,
+            @RequestParam(required = false) Integer distance,
+            @RequestParam(required = false) Integer weight,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
+    ) {
+<span class="fc" id="L103">        Sort sort = Sort.by(&quot;raceDate&quot;).ascending();</span>
+<span class="fc" id="L104">        return repo.findAll(buildSpec(athleteId, race, raceType, distance, weight, from, to), sort);</span>
+    }
+
+    // ===== SEARCH — supports dynamic sorting (time/date asc/desc) =====
+    @GetMapping(&quot;/search&quot;)
+    public List&lt;Result&gt; searchResults(
+            @RequestParam(required = false) Integer athleteId,
+            @RequestParam(required = false) String race,
+            @RequestParam(required = false) String raceType,
+            @RequestParam(required = false) Integer distance,
+            @RequestParam(required = false) Integer weight,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            @RequestParam(defaultValue = &quot;date&quot;) String sortBy,
+            @RequestParam(defaultValue = &quot;asc&quot;) String sortOrder
+    ) {
+        Sort sort;
+
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        switch (sortBy.toLowerCase()) {</span>
+            case &quot;time&quot;:
+<span class="fc" id="L124">                sort = Sort.by(&quot;timeMs&quot;);</span>
+<span class="fc" id="L125">                break;</span>
+            case &quot;date&quot;:
+            default:
+<span class="nc" id="L128">                sort = Sort.by(&quot;raceDate&quot;);</span>
+                break;
+        }
+
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        sort = sortOrder.equalsIgnoreCase(&quot;desc&quot;) ? sort.descending() : sort.ascending();</span>
+
+<span class="fc" id="L134">        return repo.findAll(buildSpec(athleteId, race, raceType, distance, weight, fromDate, toDate), sort);</span>
+    }
+
+    // ===== Helper — dynamic Specification builder =====
+    private Specification&lt;Result&gt; buildSpec(
+            Integer athleteId, String race, String raceType,
+            Integer distance, Integer weight, LocalDate from, LocalDate to
+    ) {
+<span class="fc" id="L142">        return (root, query, cb) -&gt; {</span>
+<span class="nc" id="L143">            Predicate p = cb.conjunction();</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            if (athleteId != null) p = cb.and(p, cb.equal(root.get(&quot;athleteId&quot;), athleteId));</span>
+<span class="nc bnc" id="L145" title="All 4 branches missed.">            if (race != null &amp;&amp; !race.isEmpty())</span>
+<span class="nc" id="L146">                p = cb.and(p, cb.like(cb.lower(root.get(&quot;race&quot;)), &quot;%&quot; + race.toLowerCase() + &quot;%&quot;));</span>
+<span class="nc bnc" id="L147" title="All 4 branches missed.">            if (raceType != null &amp;&amp; !raceType.isEmpty())</span>
+<span class="nc" id="L148">                p = cb.and(p, cb.like(cb.lower(root.get(&quot;raceType&quot;)), &quot;%&quot; + raceType.toLowerCase() + &quot;%&quot;));</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            if (distance != null) p = cb.and(p, cb.equal(root.get(&quot;distance&quot;), distance));</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (weight != null) p = cb.and(p, cb.equal(root.get(&quot;weight&quot;), weight));</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (from != null)</span>
+<span class="nc" id="L152">                p = cb.and(p, cb.greaterThanOrEqualTo(root.get(&quot;raceDate&quot;), from));</span>
+<span class="nc bnc" id="L153" title="All 2 branches missed.">            if (to != null)</span>
+<span class="nc" id="L154">                p = cb.and(p, cb.lessThan(root.get(&quot;raceDate&quot;), to.plusDays(1)));</span>
+
+<span class="nc" id="L156">            return p;</span>
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

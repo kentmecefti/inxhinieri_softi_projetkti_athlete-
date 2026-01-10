@@ -10,22 +10,22 @@ public class CoachAthleteRelation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //Trajneri
+    // ===== COACH =====
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coach_id", nullable = false)
     private Coach coach;
 
-    //Sportisti
+    // ===== ATHLETE =====
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "athlete_id", nullable = false)
     private Athlete athlete;
 
-    //Statusi
+    // ===== STATUS =====
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id")
     private Status status;
 
-    //Konstruktori
+    // ===== Constructors =====
     public CoachAthleteRelation() {}
 
     public CoachAthleteRelation(Coach coach, Athlete athlete, Status status) {
@@ -34,7 +34,7 @@ public class CoachAthleteRelation {
         this.status = status;
     }
 
-    //Getters dhe Setters
+    // ===== Getters & Setters =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

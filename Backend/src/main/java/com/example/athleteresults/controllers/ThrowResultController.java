@@ -28,26 +28,26 @@ public class ThrowResultController {
         this.athleteRepo = athleteRepo;
     }
 
-    
+    // ===== GET — all results =====
     @GetMapping
     public List<ThrowResult> all() {
         return repo.findAll();
     }
 
-    
+    // ===== GET — by athlete =====
     @GetMapping("/athlete/{athleteId}")
     public List<ThrowResult> byAthlete(@PathVariable Integer athleteId) {
         return repo.findByAthleteId(athleteId);
     }
 
-    
+    // ===== GET — single result =====
     @GetMapping("/{id}")
     public ThrowResult getById(@PathVariable Integer id) {
         return repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Throw result not found"));
     }
 
-    
+    // ===== POST — create new =====
     @PostMapping
     public ThrowResult create(@RequestBody ThrowResult result) {
         if (result.getAthlete() == null || result.getAthlete().getId() == null ||
@@ -57,7 +57,7 @@ public class ThrowResultController {
         return repo.save(result);
     }
 
-    
+    // ===== PUT — update existing =====
     @PutMapping("/{id}")
     public ThrowResult update(@PathVariable Integer id, @RequestBody ThrowResult updated) {
         if (updated.getAthlete() == null || updated.getAthlete().getId() == null ||
@@ -80,7 +80,7 @@ public class ThrowResultController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Throw result not found"));
     }
 
-    
+    // ===== DELETE — by ID =====
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         if (!repo.existsById(id)) {
@@ -90,7 +90,7 @@ public class ThrowResultController {
         return "tralalala";
     }
 
-    
+    // ===== FILTER — date range / type / event / style =====
     @GetMapping("/filter")
     public List<ThrowResult> filterResults(
             @RequestParam(required = false) Integer athleteId,
@@ -104,7 +104,7 @@ public class ThrowResultController {
         return repo.findAll(buildSpec(athleteId, throwType, event, throwStyle, from, to), sort);
     }
 
-    
+    // ===== SEARCH — supports sorting by distance/date & filters =====
     @GetMapping("/search")
     public List<ThrowResult> searchResults(
             @RequestParam(required = false) Integer athleteId,
@@ -116,7 +116,7 @@ public class ThrowResultController {
             @RequestParam(defaultValue = "date") String sortBy,
             @RequestParam(defaultValue = "desc") String sortOrder
     ) {
-        
+        // ===== Determine Sort Field =====
         String sortField;
         switch (sortBy.toLowerCase()) {
             case "distance":
@@ -128,16 +128,16 @@ public class ThrowResultController {
                 break;
         }
 
-        
+        // ===== Determine Sort Direction =====
         Sort sort = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(Sort.Direction.ASC, sortField)
                 : Sort.by(Sort.Direction.DESC, sortField);
 
-        
+        // ===== Execute Query =====
         return repo.findAll(buildSpec(athleteId, throwType, event, throwStyle, from, to), sort);
     }
 
-    
+    // ===== Helper — dynamic filter builder =====
     private Specification<ThrowResult> buildSpec(
             Integer athleteId,
             String throwType,

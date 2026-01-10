@@ -16,7 +16,7 @@ public class Role {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference        // 👈 prevents recursion back to User
     private User user;
 
     public Role() {}
@@ -26,7 +26,7 @@ public class Role {
         this.user = user;
     }
 
-    //Getters dhe Setters
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

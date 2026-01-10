@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface WeightMetricRepository extends JpaRepository<WeightMetric, Integer> {
+    // Returns all WeightMetric records for a given gym session ID
     List<WeightMetric> findByGymSessionId(Integer gymId);
 }

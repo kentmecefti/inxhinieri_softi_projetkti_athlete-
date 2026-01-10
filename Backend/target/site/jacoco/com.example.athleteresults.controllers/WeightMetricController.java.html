@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WeightMetricController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">WeightMetricController.java</span></div><h1>WeightMetricController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.WeightMetric;
+import com.example.athleteresults.repositories.WeightMetricRepository;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/metrics/weight&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class WeightMetricController {
+
+    private final WeightMetricRepository weightMetricRepository;
+
+<span class="fc" id="L17">    public WeightMetricController(WeightMetricRepository weightMetricRepository) {</span>
+<span class="fc" id="L18">        this.weightMetricRepository = weightMetricRepository;</span>
+<span class="fc" id="L19">    }</span>
+
+    // ✅ GET all weight metrics for a given gym session
+    @GetMapping
+    public List&lt;WeightMetric&gt; getByGym(@RequestParam Integer gymId) {
+<span class="fc" id="L24">        return weightMetricRepository.findByGymSessionId(gymId);</span>
+    }
+
+    // ✅ POST create new weight metric
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public WeightMetric create(@RequestBody WeightMetric metric) {
+<span class="fc" id="L31">        return weightMetricRepository.save(metric);</span>
+    }
+
+    // ✅ DELETE a weight metric by ID
+    @DeleteMapping(&quot;/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (!weightMetricRepository.existsById(id)) {</span>
+<span class="fc" id="L39">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Weight metric not found&quot;);</span>
+        }
+<span class="fc" id="L41">        weightMetricRepository.deleteById(id);</span>
+<span class="fc" id="L42">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
 
-    // Find status by its name
+    // Find status by its name (e.g. "pending", "accept", "refuse")
     Optional<Status> findByStatusName(String statusName);
 }

@@ -70,10 +70,14 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = "john", roles = "ATHLETE")
     void getUser_self_shouldReturnUser() throws Exception {
+
         User u = sampleUser();
         u.setId(1);
 
         Mockito.when(userRepo.findByUsername("john"))
+                .thenReturn(Optional.of(u));
+
+        Mockito.when(userRepo.findById(1))
                 .thenReturn(Optional.of(u));
 
         mockMvc.perform(get("/api/users/1"))
@@ -88,15 +92,20 @@ class UserControllerTest {
     @Test
     @WithMockUser(username = "john", roles = "ATHLETE")
     void getUser_other_shouldBeForbidden() throws Exception {
+
         User u = sampleUser();
         u.setId(1);
 
         Mockito.when(userRepo.findByUsername("john"))
                 .thenReturn(Optional.of(u));
 
+        Mockito.when(userRepo.findById(2))
+                .thenReturn(Optional.of(new User()));
+
         mockMvc.perform(get("/api/users/2"))
                 .andExpect(status().isForbidden());
     }
+
 
     /* =====================================================
        POST /api/users  (ADMIN)

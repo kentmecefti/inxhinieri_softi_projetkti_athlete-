@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PlanService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.services</a> &gt; <span class="el_source">PlanService.java</span></div><h1>PlanService.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.services;
+
+import com.example.athleteresults.entities.Plan;
+import com.example.athleteresults.repositories.PlanRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional
+public class PlanService {
+
+    private final PlanRepository planRepository;
+
+<span class="fc" id="L18">    public PlanService(PlanRepository planRepository) {</span>
+<span class="fc" id="L19">        this.planRepository = planRepository;</span>
+<span class="fc" id="L20">    }</span>
+
+    // ====== GET ALL ======
+    public List&lt;Plan&gt; getAllPlans() {
+<span class="fc" id="L24">        return planRepository.findAll();</span>
+    }
+
+    // ====== GET ONE ======
+    public Optional&lt;Plan&gt; getPlanById(Integer id) {
+<span class="fc" id="L29">        return planRepository.findById(id);</span>
+    }
+
+    public List&lt;Plan&gt; getPlansByAthlete(Integer athleteId) {
+<span class="fc" id="L33">        return planRepository.findByAthleteIdOrderByPlanDateAsc(athleteId);</span>
+    }
+
+    public List&lt;Plan&gt; getPlansByCoach(Integer coachId) {
+<span class="nc" id="L37">        return planRepository.findByCoachIdOrderByPlanDateAsc(coachId);</span>
+    }
+
+
+    // ====== SAVE (CREATE or UPDATE) ======
+    public Plan savePlan(Plan plan) {
+        // 🧩 Only check for duplicates if it's a NEW plan (no ID yet)
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (plan.getId() == null) {</span>
+<span class="fc" id="L45">            this.checkPlanAvailability(plan.getAthlete().getId(), plan.getPlanDate());</span>
+        }
+<span class="fc" id="L47">        return planRepository.save(plan);</span>
+    }
+
+    // ====== DELETE ======
+    public void deletePlan(Integer id) {
+<span class="fc" id="L52">        planRepository.deleteById(id);</span>
+<span class="fc" id="L53">    }</span>
+
+    // ====== DUPLICATE CHECK ======
+    public void checkPlanAvailability(Integer athleteId, LocalDate planDate) {
+<span class="fc" id="L57">        List&lt;Plan&gt; plans = planRepository.findByDateAndAthleteId(planDate, athleteId);</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!plans.isEmpty()) {</span>
+<span class="fc" id="L59">            throw new RuntimeException(</span>
+                    &quot;Athlete with id: &quot; + athleteId +
+                            &quot; already has a plan assigned for date: &quot; + planDate
+            );
+        }
+<span class="fc" id="L64">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

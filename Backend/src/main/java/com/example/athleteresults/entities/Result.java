@@ -28,13 +28,14 @@ public class Result {
     @Column(name = "time_ms")
     private Integer timeMs;
 
+    //  New optional weight column
     @Column(name = "weight", nullable = true)
     private Integer weight;
 
     @Column(name = "notes")
-    private String notes;
+    private String notes;  //  new field added
 
-    //Konstruktorët
+    // 🔹 Constructors
     public Result() {
     }
 
@@ -51,7 +52,7 @@ public class Result {
         this.notes = notes;
     }
 
-    //Getters dhe Setters
+    // 🔹 Getters & Setters
     public Integer getId() {
         return id;
     }

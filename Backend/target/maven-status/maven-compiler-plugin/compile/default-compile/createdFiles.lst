@@ -40,7 +40,6 @@ com\example\athleteresults\entities\Plan.class
 com\example\athleteresults\controllers\PlanController$PlanDTO.class
 com\example\athleteresults\controllers\SessionController.class
 com\example\athleteresults\security\JwtService.class
-com\example\athleteresults\dto\UserDto.class
 com\example\athleteresults\controllers\WeightMetricController.class
 com\example\athleteresults\repositories\SessionRepository.class
 com\example\athleteresults\repositories\ReflexMetricRepository.class

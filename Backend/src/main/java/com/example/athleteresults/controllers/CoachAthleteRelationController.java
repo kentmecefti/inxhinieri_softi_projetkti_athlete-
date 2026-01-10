@@ -31,51 +31,51 @@ public class CoachAthleteRelationController {
         this.userRepo = userRepo;
     }
 
-    
+    // ===== SEND REQUEST (Coach → Athlete) =====
     @PostMapping("/request")
     public ResponseEntity<String> sendRequest(
             @RequestParam Integer coachId,
             @RequestParam Integer athleteId,
             @AuthenticationPrincipal UserDetails userDetails) {
 
-        
+        // ✅ Validate authentication
         if (userDetails == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not logged in");
 
-        
+        // ✅ Fetch current user and linked coach
         User user = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Coach coach = coachRepo.findById(coachId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found"));
 
-        
+        // 🔒 Security check: only the logged-in coach can send his own requests
         if (!coach.getUserId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                     "Backend refused: this coach ID doesn't match your login.");
         }
 
-       
+        // ✅ Fetch athlete
         Athlete athlete = athleteRepo.findById(athleteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Athlete not found"));
 
-        
+        // ✅ Prevent duplicates
         if (relationRepo.findByCoachAndAthlete(coach, athlete).isPresent()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Relation already exists or pending");
         }
 
-        
+        // ✅ Create pending status
         Status pending = statusRepo.findByStatusName("pending")
                 .orElseGet(() -> statusRepo.save(new Status("pending")));
 
-        
+        // ✅ Save new relation
         CoachAthleteRelation rel = new CoachAthleteRelation(coach, athlete, pending);
         relationRepo.save(rel);
 
         return ResponseEntity.ok("Link request sent successfully!");
     }
 
-    
+    // ===== ACCEPT REQUEST (Athlete → Accept) =====
     @PostMapping("/accept")
     public ResponseEntity<String> acceptRequest(
             @RequestParam Integer athleteId,
@@ -97,7 +97,7 @@ public class CoachAthleteRelationController {
         return ResponseEntity.ok("Request accepted successfully!");
     }
 
-    
+    // ===== REFUSE REQUEST (Athlete → Refuse) =====
     @PostMapping("/refuse")
     public ResponseEntity<String> refuseRequest(
             @RequestParam Integer athleteId,
@@ -127,7 +127,7 @@ public class CoachAthleteRelationController {
         if (userDetails == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not logged in");
 
-        
+        // Logged user must be the athlete
         User user = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 

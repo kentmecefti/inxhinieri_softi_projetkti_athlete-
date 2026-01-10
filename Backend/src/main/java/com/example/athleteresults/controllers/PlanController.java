@@ -34,7 +34,7 @@ public class PlanController {
         this.repo = repo;
     }
 
-    
+    // ====== GET all plans ======
     @GetMapping
     public List<PlanDTO> getAllPlans() {
         return planService.getAllPlans().stream()
@@ -42,7 +42,7 @@ public class PlanController {
                 .toList();
     }
 
-    
+    // ====== GET by ID ======
     @GetMapping("/{id}")
     public PlanDTO getPlanById(@PathVariable Integer id) {
         Plan plan = planService.getPlanById(id)
@@ -50,7 +50,7 @@ public class PlanController {
         return PlanDTO.fromEntity(plan);
     }
 
-    
+    // ====== GET by Athlete ======
     @GetMapping("/athlete/{athleteId}")
     public List<PlanDTO> getPlansByAthlete(@PathVariable Integer athleteId) {
         return planService.getPlansByAthlete(athleteId).stream()
@@ -58,7 +58,7 @@ public class PlanController {
                 .toList();
     }
 
-    
+    // ====== GET by Coach ======
     @GetMapping("/coach/{coachId}")
     public List<PlanDTO> getPlansByCoach(@PathVariable Integer coachId) {
         return planService.getPlansByCoach(coachId).stream()
@@ -66,7 +66,7 @@ public class PlanController {
                 .toList();
     }
 
-    
+    // ====== CREATE ======
     @PostMapping
     public PlanDTO createPlan(@RequestBody PlanRequest req) {
         Athlete athlete = athleteRepository.findById(req.athleteId())
@@ -89,7 +89,7 @@ public class PlanController {
         return PlanDTO.fromEntity(planService.savePlan(plan));
     }
 
-    
+    // ====== UPDATE ======
     @PutMapping("/{id}")
     public PlanDTO updatePlan(@PathVariable Integer id, @RequestBody PlanRequest req) {
         Plan existing = planService.getPlanById(id)
@@ -113,13 +113,13 @@ public class PlanController {
         return PlanDTO.fromEntity(planService.savePlan(existing));
     }
 
-    
+    // ====== DELETE ======
     @DeleteMapping("/{id}")
     public void deletePlan(@PathVariable Integer id) {
         planService.deletePlan(id);
     }
 
-    
+    // ====== SEND TO MULTIPLE ======
     @PostMapping("/coach/{coachId}/send")
     public List<PlanDTO> sendPlanToAthletes(
             @PathVariable Integer coachId,
@@ -161,6 +161,7 @@ public class PlanController {
                 .toList();
     }
 
+    // add inside PlanController
     @PatchMapping("/{id}/actual")
     public PlanDTO patchActual(@PathVariable Integer id, @RequestBody ActualOnly body) {
         Plan p = planService.getPlanById(id)
@@ -169,11 +170,11 @@ public class PlanController {
         return PlanDTO.fromEntity(planService.savePlan(p));
     }
 
-    
+    // record for request body
     public record ActualOnly(String actualPlan) {}
 
 
-    
+    // ===== Helper — dynamic Specification builder =====
     private Specification<Plan> buildSpec(
             Integer athleteId, Integer coachId, LocalDate from, LocalDate to
     ) {
@@ -197,7 +198,7 @@ public class PlanController {
     }
 
 
-    
+    // ====== RECORD TYPES ======
     public record PlanRequest(
             Integer athleteId,
             Integer coachId,
@@ -215,7 +216,7 @@ public class PlanController {
             String notes
     ) {}
 
-    
+    // ====== DTO (Data Transfer Object) ======
     public record PlanDTO(
             Integer id,
             java.time.LocalDate planDate,
@@ -242,7 +243,7 @@ public class PlanController {
         }
     }
 
-    
+    // ====== EXCEPTION HANDLER ======
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(org.springframework.http.HttpStatus.BAD_REQUEST)
     public String handleRuntime(RuntimeException ex) {

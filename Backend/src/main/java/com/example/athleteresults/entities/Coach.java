@@ -3,6 +3,7 @@ package com.example.athleteresults.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -15,6 +16,10 @@ public class Coach {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "coach_id")
     private Integer id;
+
+    // 🔥 NEW — REQUIRED
+    @Column(name = "public_id", nullable = false, unique = true, updatable = false)
+    private String publicId;
 
     @Column(nullable = false)
     private String name;
@@ -43,11 +48,11 @@ public class Coach {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    //Relation me perdoruesit
+    // ===== Relation to Users =====
     @Column(name = "user_id")
     private Integer userId;
 
-    //Many-to-Many me Athletes
+    // ===== Many-to-Many with Athletes =====
     @ManyToMany
     @JoinTable(
             name = "coach_athlete_relation",
@@ -57,12 +62,20 @@ public class Coach {
     @JsonIgnore
     private Set<Athlete> athletes = new HashSet<>();
 
-    //Relation Entity
+    // ===== Relation Entity (status holder) =====
     @OneToMany(mappedBy = "coach", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<CoachAthleteRelation> coachAthleteRelations = new HashSet<>();
 
-    //Konstruktoret
+    // 🔥 NEW — AUTO-GENERATE public_id
+    @PrePersist
+    private void generatePublicId() {
+        if (this.publicId == null) {
+            this.publicId = UUID.randomUUID().toString();
+        }
+    }
+
+    // ===== Constructors =====
     public Coach() {}
 
     public Coach(String name, Integer userId) {
@@ -70,9 +83,12 @@ public class Coach {
         this.userId = userId;
     }
 
-    //Getters dhe Setters
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    public String getPublicId() { return publicId; }
+    public void setPublicId(String publicId) { this.publicId = publicId; }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -112,14 +128,14 @@ public class Coach {
         this.coachAthleteRelations = coachAthleteRelations;
     }
 
-    //Linkimi me perdoruesin
+    // ===== Link to User =====
     public void setUser(User savedUser) {
         if (savedUser != null) {
             this.userId = savedUser.getId();
         }
     }
 
-    // Metoda per te marre atletet me statusin e tyre
+    // ===== Dynamic field: athletes with status =====
     @Transient
     public Set<Map<String, Object>> getAthletesWithStatus() {
         Set<Map<String, Object>> result = new HashSet<>();
@@ -130,7 +146,10 @@ public class Coach {
             map.put("athWeight", a.getAthWeight());
             map.put("name", a.getName());
             map.put("userId", a.getUserId());
-            map.put("status", rel.getStatus() != null ? rel.getStatus().getStatusName() : "pending");
+            map.put("status",
+                    rel.getStatus() != null
+                            ? rel.getStatus().getStatusName()
+                            : "pending");
             result.add(map);
         }
         return result;

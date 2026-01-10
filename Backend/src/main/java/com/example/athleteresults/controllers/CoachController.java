@@ -36,7 +36,7 @@ public class CoachController {
         this.statusRepo = statusRepo;
     }
 
-    
+    // ===== GET all coaches (detailed version) =====
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAll() {
         List<Map<String, Object>> responseList = new ArrayList<>();
@@ -79,18 +79,18 @@ public class CoachController {
         return ResponseEntity.ok(responseList);
     }
 
-    
+    // ===== GET single coach (with athletes + status) =====
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getOne(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
 
-        
+        //  1. Kontrollo nëse user-i është i loguar
         if (userDetails == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not logged in");
 
-        
+        //  2. Gjej user-in në DB
         User user = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
@@ -100,26 +100,26 @@ public class CoachController {
         boolean isCoach = userDetails.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_COACH"));
 
-        
+        // 🛡 3. NËSE është COACH → kontrollo që po sheh vetëm veten
         if (isCoach && !isAdmin) {
 
             Coach loggedCoach = coachRepo.findByUserId(user.getId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Not a coach"));
 
-            
+            // Coach mund të shohë vetëm vetveten
             if (!loggedCoach.getId().equals(id)) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN,
                         "You cannot access another coach's profile.");
             }
         }
 
-        
+        // 4. Nëse është ADMIN → lejohet automatikisht
 
-        
+        // 5. Merr coach-in që kërkohet
         Coach coach = coachRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found"));
 
-        
+        // 6. Ndërto response
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("id", coach.getId());
         response.put("name", coach.getName());
@@ -155,7 +155,7 @@ public class CoachController {
         return ResponseEntity.ok(response);
     }
 
-    
+    // ===== CREATE coach linked to user =====
     @PostMapping
     public ResponseEntity<Coach> create(@RequestBody Map<String, Object> body) {
         Object userIdObj = body.get("user_id");
@@ -186,7 +186,7 @@ public class CoachController {
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    
+    // ===== UPDATE coach info =====
     @PutMapping("/{id}")
     public ResponseEntity<Coach> updateCoach(@PathVariable Integer id, @RequestBody Map<String, Object> body) {
         Coach coach = coachRepo.findById(id)
@@ -208,7 +208,7 @@ public class CoachController {
         return ResponseEntity.ok(updated);
     }
 
-    
+    // ===== GET coach by user_id =====
     @GetMapping("/by-user/{userId}")
     public ResponseEntity<Coach> getByUserId(@PathVariable Integer userId) {
         Coach coach = coachRepo.findByUserId(userId)
@@ -216,7 +216,7 @@ public class CoachController {
         return ResponseEntity.ok(coach);
     }
 
-    
+    // ===== GET all athletes by status =====
     @GetMapping("/{coachId}/athletes/{status}")
     public ResponseEntity<List<Map<String, Object>>> getCoachAthletesByStatus(
             @PathVariable Integer coachId,
@@ -248,7 +248,7 @@ public class CoachController {
         return ResponseEntity.ok(result);
     }
 
-   
+    // ===== LINK athlete to coach (default status = pending) =====
     @PostMapping("/{coachId}/athletes/{athleteId}")
     public ResponseEntity<String> linkAthlete(@PathVariable Integer coachId, @PathVariable Integer athleteId) {
         Coach coach = coachRepo.findById(coachId)
@@ -267,7 +267,7 @@ public class CoachController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Athlete linked with status 'pending'");
     }
 
-    
+    // ===== UPDATE relation status =====
     @PutMapping("/{coachId}/athletes/{athleteId}/status/{statusName}")
     public ResponseEntity<String> updateRelationStatus(@PathVariable Integer coachId,
                                                        @PathVariable Integer athleteId,
@@ -289,7 +289,7 @@ public class CoachController {
         return ResponseEntity.ok("Relation status updated to '" + statusName + "'");
     }
 
-    
+    // ===== UNLINK athlete =====
     @DeleteMapping("/{coachId}/athletes/{athleteId}")
     public ResponseEntity<String> unlinkAthlete(
             @PathVariable Integer coachId,
@@ -299,24 +299,24 @@ public class CoachController {
         if (userDetails == null)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not logged in");
 
-        
+        // Fetch logged-in user
         User user = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        
+        // Fetch coach
         Coach coach = coachRepo.findById(coachId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Coach not found"));
 
-        
+        // 🔒 Security: Logged-in user must be the same coach
         if (!coach.getUserId().equals(user.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You cannot delete athletes for another coach.");
         }
 
-        
+        // Fetch athlete
         Athlete athlete = athleteRepo.findById(athleteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Athlete not found"));
 
-        
+        // Delete relation if present
         relationRepo.findByCoachAndAthlete(coach, athlete)
                 .ifPresent(relationRepo::delete);
 
@@ -324,7 +324,7 @@ public class CoachController {
     }
 
 
-    
+    // ===== DELETE coach =====
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCoach(@PathVariable Integer id) {
         if (!coachRepo.existsById(id))
@@ -339,11 +339,11 @@ public class CoachController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 
-        
+        // Find the logged-in user
         User user = userRepo.findByUsername(userDetails.getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        
+        // Find coach linked to this user
         Coach coach = coachRepo.findByUserId(user.getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "No coach found for this account"));
 

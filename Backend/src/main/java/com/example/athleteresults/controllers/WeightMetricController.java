@@ -18,20 +18,20 @@ public class WeightMetricController {
         this.weightMetricRepository = weightMetricRepository;
     }
 
-    
+    // ✅ GET all weight metrics for a given gym session
     @GetMapping
     public List<WeightMetric> getByGym(@RequestParam Integer gymId) {
         return weightMetricRepository.findByGymSessionId(gymId);
     }
 
-    
+    // ✅ POST create new weight metric
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public WeightMetric create(@RequestBody WeightMetric metric) {
         return weightMetricRepository.save(metric);
     }
 
-    
+    // ✅ DELETE a weight metric by ID
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {

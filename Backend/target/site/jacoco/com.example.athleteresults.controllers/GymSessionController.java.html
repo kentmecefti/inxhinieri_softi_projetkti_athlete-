@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GymSessionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">GymSessionController.java</span></div><h1>GymSessionController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.Athlete;
+import com.example.athleteresults.entities.GymSession;
+import com.example.athleteresults.repositories.AthleteRepository;
+import com.example.athleteresults.repositories.GymSessionRepository;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/gymsessions&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+public class GymSessionController {
+
+    private final GymSessionRepository gymSessionRepository;
+    private final AthleteRepository athleteRepository;
+
+<span class="fc" id="L21">    public GymSessionController(GymSessionRepository gymSessionRepository, AthleteRepository athleteRepository) {</span>
+<span class="fc" id="L22">        this.gymSessionRepository = gymSessionRepository;</span>
+<span class="fc" id="L23">        this.athleteRepository = athleteRepository;</span>
+<span class="fc" id="L24">    }</span>
+
+    @GetMapping
+    public List&lt;GymSession&gt; getAll() {
+<span class="fc" id="L28">        return gymSessionRepository.findAll();</span>
+    }
+
+    @GetMapping(&quot;/athlete/{athleteId}&quot;)
+    public List&lt;GymSession&gt; getByAthlete(@PathVariable Integer athleteId) {
+<span class="fc" id="L33">        return gymSessionRepository.findByAthleteId(athleteId);</span>
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public GymSession create(@RequestBody GymSession session) {
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if (session.getAthlete() == null || session.getAthlete().getId() == null) {</span>
+<span class="fc" id="L40">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Athlete ID is required&quot;);</span>
+        }
+
+<span class="fc" id="L43">        Athlete athlete = athleteRepository.findById(session.getAthlete().getId())</span>
+<span class="fc" id="L44">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="fc" id="L46">        session.setAthlete(athlete);</span>
+
+<span class="fc" id="L48">        return gymSessionRepository.save(session);</span>
+    }
+
+    @DeleteMapping(&quot;/{id}&quot;)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (!gymSessionRepository.existsById(id)) {</span>
+<span class="fc" id="L55">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Gym session not found&quot;);</span>
+        }
+<span class="fc" id="L57">        gymSessionRepository.deleteById(id);</span>
+<span class="fc" id="L58">    }</span>
+
+    @GetMapping(&quot;/filter&quot;)
+    public List&lt;GymSession&gt; filter(
+            @RequestParam(required = false) Integer athleteId,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to
+    ) {
+<span class="fc" id="L68">        List&lt;GymSession&gt; sessions = gymSessionRepository.findAll();</span>
+<span class="fc" id="L69">        return sessions.stream()</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                .filter(s -&gt; athleteId == null ||</span>
+<span class="pc bpc" id="L71" title="2 of 4 branches missed.">                        (s.getAthlete() != null &amp;&amp; s.getAthlete().getId().equals(athleteId)))</span>
+<span class="pc bpc" id="L72" title="3 of 6 branches missed.">                .filter(s -&gt; category == null || category.isEmpty() || s.getCategory().equalsIgnoreCase(category))</span>
+<span class="pc bpc" id="L73" title="3 of 6 branches missed.">                .filter(s -&gt; search == null || search.isEmpty() || s.getExerciseName().toLowerCase().contains(search.toLowerCase()))</span>
+<span class="fc" id="L74">                .filter(s -&gt; {</span>
+<span class="pc bpc" id="L75" title="2 of 4 branches missed.">                    if (from == null || from.isEmpty()) return true;</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                    return !s.getSessionDate().isBefore(java.time.LocalDate.parse(from));</span>
+                })
+<span class="fc" id="L78">                .filter(s -&gt; {</span>
+<span class="pc bpc" id="L79" title="2 of 4 branches missed.">                    if (to == null || to.isEmpty()) return true;</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">                    return !s.getSessionDate().isAfter(java.time.LocalDate.parse(to));</span>
+                })
+<span class="fc" id="L82">                .toList();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

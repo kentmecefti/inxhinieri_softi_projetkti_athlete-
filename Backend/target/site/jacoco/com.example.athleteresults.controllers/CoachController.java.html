@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CoachController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">athlete-results-pg</a> &gt; <a href="index.source.html" class="el_package">com.example.athleteresults.controllers</a> &gt; <span class="el_source">CoachController.java</span></div><h1>CoachController.java</h1><pre class="source lang-java linenums">package com.example.athleteresults.controllers;
+
+import com.example.athleteresults.entities.*;
+import com.example.athleteresults.repositories.*;
+import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+@RestController
+@RequestMapping(&quot;/api/coaches&quot;)
+@CrossOrigin(origins = &quot;*&quot;)
+@PreAuthorize(&quot;hasAnyAuthority('ROLE_ADMIN','ROLE_COACH')&quot;)
+public class CoachController {
+
+    private final CoachRepository coachRepo;
+    private final AthleteRepository athleteRepo;
+    private final UserRepository userRepo;
+    private final CoachAthleteRelationRepository relationRepo;
+    private final StatusRepository statusRepo;
+
+    public CoachController(CoachRepository coachRepo,
+                           AthleteRepository athleteRepo,
+                           UserRepository userRepo,
+                           CoachAthleteRelationRepository relationRepo,
+<span class="fc" id="L31">                           StatusRepository statusRepo) {</span>
+<span class="fc" id="L32">        this.coachRepo = coachRepo;</span>
+<span class="fc" id="L33">        this.athleteRepo = athleteRepo;</span>
+<span class="fc" id="L34">        this.userRepo = userRepo;</span>
+<span class="fc" id="L35">        this.relationRepo = relationRepo;</span>
+<span class="fc" id="L36">        this.statusRepo = statusRepo;</span>
+<span class="fc" id="L37">    }</span>
+
+    // ===== GET all coaches (detailed version) =====
+    @GetMapping
+    public ResponseEntity&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; getAll() {
+<span class="fc" id="L42">        List&lt;Map&lt;String, Object&gt;&gt; responseList = new ArrayList&lt;&gt;();</span>
+
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        for (Coach coach : coachRepo.findAll()) {</span>
+<span class="fc" id="L45">            Map&lt;String, Object&gt; response = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L46">            response.put(&quot;id&quot;, coach.getId());</span>
+<span class="fc" id="L47">            response.put(&quot;name&quot;, coach.getName());</span>
+<span class="fc" id="L48">            response.put(&quot;lastname&quot;, coach.getLastname());</span>
+<span class="fc" id="L49">            response.put(&quot;gender&quot;, coach.getGender());</span>
+<span class="fc" id="L50">            response.put(&quot;experienceYears&quot;, coach.getExperienceYears());</span>
+<span class="fc" id="L51">            response.put(&quot;specialization&quot;, coach.getSpecialization());</span>
+<span class="fc" id="L52">            response.put(&quot;phone&quot;, coach.getPhone());</span>
+<span class="fc" id="L53">            response.put(&quot;club&quot;, coach.getClub());</span>
+<span class="fc" id="L54">            response.put(&quot;country&quot;, coach.getCountry());</span>
+<span class="fc" id="L55">            response.put(&quot;userId&quot;, coach.getUserId());</span>
+<span class="fc" id="L56">            response.put(&quot;updatedAt&quot;, coach.getUpdatedAt());</span>
+
+<span class="fc" id="L58">            List&lt;Map&lt;String, Object&gt;&gt; athletesWithStatus = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">            for (CoachAthleteRelation rel : coach.getCoachAthleteRelations()) {</span>
+<span class="nc" id="L60">                Athlete a = rel.getAthlete();</span>
+<span class="nc" id="L61">                Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L62">                map.put(&quot;athlete_id&quot;, a.getId());</span>
+<span class="nc" id="L63">                map.put(&quot;name&quot;, a.getName());</span>
+<span class="nc" id="L64">                map.put(&quot;lastname&quot;, a.getLastname());</span>
+<span class="nc" id="L65">                map.put(&quot;athWeight&quot;, a.getAthWeight());</span>
+<span class="nc" id="L66">                map.put(&quot;athHeight&quot;, a.getAthHeight());</span>
+<span class="nc" id="L67">                map.put(&quot;category&quot;, a.getCategory());</span>
+<span class="nc" id="L68">                map.put(&quot;performance&quot;, a.getPerformance());</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                String relStatus = rel.getStatus() != null ? rel.getStatus().getStatusName() : &quot;pending&quot;;</span>
+<span class="nc" id="L70">                map.put(&quot;relation_status&quot;, relStatus);</span>
+<span class="nc" id="L71">                map.put(&quot;userId&quot;, a.getUserId());</span>
+<span class="nc" id="L72">                athletesWithStatus.add(map);</span>
+<span class="nc" id="L73">            }</span>
+
+<span class="fc" id="L75">            response.put(&quot;athletesWithStatus&quot;, athletesWithStatus);</span>
+<span class="fc" id="L76">            responseList.add(response);</span>
+<span class="fc" id="L77">        }</span>
+
+<span class="fc" id="L79">        return ResponseEntity.ok(responseList);</span>
+    }
+
+    // ===== GET single coach (with athletes + status) =====
+    @GetMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; getOne(
+            @PathVariable Integer id,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
+
+        //  1. Kontrollo nëse user-i është i loguar
+<span class="fc bfc" id="L90" title="All 2 branches covered.">        if (userDetails == null)</span>
+<span class="fc" id="L91">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Not logged in&quot;);</span>
+
+        //  2. Gjej user-in në DB
+<span class="fc" id="L94">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="pc" id="L95">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+
+<span class="fc" id="L97">        boolean isAdmin = userDetails.getAuthorities().stream()</span>
+<span class="fc" id="L98">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ADMIN&quot;));</span>
+
+<span class="fc" id="L100">        boolean isCoach = userDetails.getAuthorities().stream()</span>
+<span class="fc" id="L101">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_COACH&quot;));</span>
+
+        // 🛡 3. NËSE është COACH → kontrollo që po sheh vetëm veten
+<span class="pc bpc" id="L104" title="2 of 4 branches missed.">        if (isCoach &amp;&amp; !isAdmin) {</span>
+
+<span class="fc" id="L106">            Coach loggedCoach = coachRepo.findByUserId(user.getId())</span>
+<span class="pc" id="L107">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN, &quot;Not a coach&quot;));</span>
+
+            // Coach mund të shohë vetëm vetveten
+<span class="fc bfc" id="L110" title="All 2 branches covered.">            if (!loggedCoach.getId().equals(id)) {</span>
+<span class="fc" id="L111">                throw new ResponseStatusException(HttpStatus.FORBIDDEN,</span>
+                        &quot;You cannot access another coach's profile.&quot;);
+            }
+        }
+
+        // 4. Nëse është ADMIN → lejohet automatikisht
+
+        // 5. Merr coach-in që kërkohet
+<span class="fc" id="L119">        Coach coach = coachRepo.findById(id)</span>
+<span class="pc" id="L120">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+        // 6. Ndërto response
+<span class="fc" id="L123">        Map&lt;String, Object&gt; response = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L124">        response.put(&quot;id&quot;, coach.getId());</span>
+<span class="fc" id="L125">        response.put(&quot;name&quot;, coach.getName());</span>
+<span class="fc" id="L126">        response.put(&quot;lastname&quot;, coach.getLastname());</span>
+<span class="fc" id="L127">        response.put(&quot;gender&quot;, coach.getGender());</span>
+<span class="fc" id="L128">        response.put(&quot;experienceYears&quot;, coach.getExperienceYears());</span>
+<span class="fc" id="L129">        response.put(&quot;specialization&quot;, coach.getSpecialization());</span>
+<span class="fc" id="L130">        response.put(&quot;phone&quot;, coach.getPhone());</span>
+<span class="fc" id="L131">        response.put(&quot;club&quot;, coach.getClub());</span>
+<span class="fc" id="L132">        response.put(&quot;country&quot;, coach.getCountry());</span>
+<span class="fc" id="L133">        response.put(&quot;userId&quot;, coach.getUserId());</span>
+<span class="fc" id="L134">        response.put(&quot;updatedAt&quot;, coach.getUpdatedAt());</span>
+
+<span class="fc" id="L136">        List&lt;Map&lt;String, Object&gt;&gt; athletesWithStatus = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        for (CoachAthleteRelation rel : coach.getCoachAthleteRelations()) {</span>
+<span class="nc" id="L138">            Athlete a = rel.getAthlete();</span>
+<span class="nc" id="L139">            Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L140">            map.put(&quot;athlete_id&quot;, a.getId());</span>
+<span class="nc" id="L141">            map.put(&quot;name&quot;, a.getName());</span>
+<span class="nc" id="L142">            map.put(&quot;lastname&quot;, a.getLastname());</span>
+<span class="nc" id="L143">            map.put(&quot;athWeight&quot;, a.getAthWeight());</span>
+<span class="nc" id="L144">            map.put(&quot;athHeight&quot;, a.getAthHeight());</span>
+<span class="nc" id="L145">            map.put(&quot;category&quot;, a.getCategory());</span>
+<span class="nc" id="L146">            map.put(&quot;performance&quot;, a.getPerformance());</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            String relStatus = rel.getStatus() != null ? rel.getStatus().getStatusName() : &quot;pending&quot;;</span>
+<span class="nc" id="L148">            map.put(&quot;relation_status&quot;, relStatus);</span>
+<span class="nc" id="L149">            map.put(&quot;userId&quot;, a.getUserId());</span>
+<span class="nc" id="L150">            athletesWithStatus.add(map);</span>
+<span class="nc" id="L151">        }</span>
+
+<span class="fc" id="L153">        response.put(&quot;athletesWithStatus&quot;, athletesWithStatus);</span>
+
+<span class="fc" id="L155">        return ResponseEntity.ok(response);</span>
+    }
+
+    // ===== CREATE coach linked to user =====
+    @PostMapping
+    public ResponseEntity&lt;Coach&gt; create(@RequestBody Map&lt;String, Object&gt; body) {
+<span class="fc" id="L161">        Object userIdObj = body.get(&quot;user_id&quot;);</span>
+<span class="fc" id="L162">        String name = (String) body.get(&quot;name&quot;);</span>
+
+<span class="pc bpc" id="L164" title="1 of 2 branches missed.">        if (userIdObj == null)</span>
+<span class="nc" id="L165">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Missing user_id&quot;);</span>
+
+<span class="pc bpc" id="L167" title="1 of 2 branches missed.">        Integer userId = (userIdObj instanceof Number) ? ((Number) userIdObj).intValue() : null;</span>
+<span class="pc bpc" id="L168" title="1 of 2 branches missed.">        if (userId == null)</span>
+<span class="nc" id="L169">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Invalid user_id type&quot;);</span>
+
+<span class="fc" id="L171">        userRepo.findById(userId)</span>
+<span class="pc" id="L172">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+
+<span class="pc bpc" id="L174" title="1 of 2 branches missed.">        Coach coach = new Coach(name != null ? name : &quot;Unnamed Coach&quot;, userId);</span>
+<span class="fc" id="L175">        coach.setLastname((String) body.get(&quot;lastname&quot;));</span>
+<span class="fc" id="L176">        coach.setGender((String) body.get(&quot;gender&quot;));</span>
+<span class="pc bpc" id="L177" title="1 of 2 branches missed.">        coach.setExperienceYears((body.get(&quot;experienceYears&quot;) instanceof Number)</span>
+<span class="pc" id="L178">                ? ((Number) body.get(&quot;experienceYears&quot;)).intValue() : null);</span>
+<span class="fc" id="L179">        coach.setSpecialization((String) body.get(&quot;specialization&quot;));</span>
+<span class="fc" id="L180">        coach.setPhone((String) body.get(&quot;phone&quot;));</span>
+<span class="fc" id="L181">        coach.setClub((String) body.get(&quot;club&quot;));</span>
+<span class="fc" id="L182">        coach.setCountry((String) body.get(&quot;country&quot;));</span>
+<span class="fc" id="L183">        coach.setUpdatedAt(LocalDateTime.now());</span>
+
+<span class="fc" id="L185">        Coach saved = coachRepo.save(coach);</span>
+<span class="fc" id="L186">        return ResponseEntity.status(HttpStatus.CREATED).body(saved);</span>
+    }
+
+    // ===== UPDATE coach info =====
+    @PutMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Coach&gt; updateCoach(@PathVariable Integer id, @RequestBody Map&lt;String, Object&gt; body) {
+<span class="nc" id="L192">        Coach coach = coachRepo.findById(id)</span>
+<span class="nc" id="L193">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+<span class="nc bnc" id="L195" title="All 2 branches missed.">        if (body.containsKey(&quot;name&quot;)) coach.setName((String) body.get(&quot;name&quot;));</span>
+<span class="nc bnc" id="L196" title="All 2 branches missed.">        if (body.containsKey(&quot;lastname&quot;)) coach.setLastname((String) body.get(&quot;lastname&quot;));</span>
+<span class="nc bnc" id="L197" title="All 2 branches missed.">        if (body.containsKey(&quot;gender&quot;)) coach.setGender((String) body.get(&quot;gender&quot;));</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">        if (body.containsKey(&quot;experienceYears&quot;))</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">            coach.setExperienceYears((body.get(&quot;experienceYears&quot;) instanceof Number)</span>
+<span class="nc" id="L200">                    ? ((Number) body.get(&quot;experienceYears&quot;)).intValue() : null);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">        if (body.containsKey(&quot;specialization&quot;)) coach.setSpecialization((String) body.get(&quot;specialization&quot;));</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">        if (body.containsKey(&quot;phone&quot;)) coach.setPhone((String) body.get(&quot;phone&quot;));</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        if (body.containsKey(&quot;club&quot;)) coach.setClub((String) body.get(&quot;club&quot;));</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">        if (body.containsKey(&quot;country&quot;)) coach.setCountry((String) body.get(&quot;country&quot;));</span>
+
+<span class="nc" id="L206">        coach.setUpdatedAt(LocalDateTime.now());</span>
+<span class="nc" id="L207">        Coach updated = coachRepo.save(coach);</span>
+<span class="nc" id="L208">        return ResponseEntity.ok(updated);</span>
+    }
+
+    // ===== GET coach by user_id =====
+    @GetMapping(&quot;/by-user/{userId}&quot;)
+    public ResponseEntity&lt;Coach&gt; getByUserId(@PathVariable Integer userId) {
+<span class="nc" id="L214">        Coach coach = coachRepo.findByUserId(userId)</span>
+<span class="nc" id="L215">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found for this user&quot;));</span>
+<span class="nc" id="L216">        return ResponseEntity.ok(coach);</span>
+    }
+
+    // ===== GET all athletes by status =====
+    @GetMapping(&quot;/{coachId}/athletes/{status}&quot;)
+    public ResponseEntity&lt;List&lt;Map&lt;String, Object&gt;&gt;&gt; getCoachAthletesByStatus(
+            @PathVariable Integer coachId,
+            @PathVariable String status) {
+
+<span class="nc" id="L225">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="nc" id="L226">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+<span class="nc" id="L228">        List&lt;Map&lt;String, Object&gt;&gt; result = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L229" title="All 2 branches missed.">        for (CoachAthleteRelation rel : coach.getCoachAthleteRelations()) {</span>
+<span class="nc bnc" id="L230" title="All 2 branches missed.">            String relStatus = rel.getStatus() != null ? rel.getStatus().getStatusName() : &quot;pending&quot;;</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">            if (relStatus.equalsIgnoreCase(status)) {</span>
+<span class="nc" id="L232">                Athlete a = rel.getAthlete();</span>
+<span class="nc" id="L233">                Map&lt;String, Object&gt; map = new LinkedHashMap&lt;&gt;();</span>
+<span class="nc" id="L234">                map.put(&quot;athlete_id&quot;, a.getId());</span>
+<span class="nc" id="L235">                map.put(&quot;id&quot;, a.getId());</span>
+<span class="nc" id="L236">                map.put(&quot;name&quot;, a.getName());</span>
+<span class="nc" id="L237">                map.put(&quot;lastname&quot;, a.getLastname());</span>
+<span class="nc" id="L238">                map.put(&quot;athWeight&quot;, a.getAthWeight());</span>
+<span class="nc" id="L239">                map.put(&quot;athHeight&quot;, a.getAthHeight());</span>
+<span class="nc" id="L240">                map.put(&quot;category&quot;, a.getCategory());</span>
+<span class="nc" id="L241">                map.put(&quot;performance&quot;, a.getPerformance());</span>
+<span class="nc" id="L242">                map.put(&quot;relation_status&quot;, relStatus);</span>
+<span class="nc" id="L243">                map.put(&quot;userId&quot;, a.getUserId());</span>
+<span class="nc" id="L244">                result.add(map);</span>
+            }
+<span class="nc" id="L246">        }</span>
+
+<span class="nc" id="L248">        return ResponseEntity.ok(result);</span>
+    }
+
+    // ===== LINK athlete to coach (default status = pending) =====
+    @PostMapping(&quot;/{coachId}/athletes/{athleteId}&quot;)
+    public ResponseEntity&lt;String&gt; linkAthlete(@PathVariable Integer coachId, @PathVariable Integer athleteId) {
+<span class="nc" id="L254">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="nc" id="L255">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+<span class="nc" id="L256">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="nc" id="L257">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="nc bnc" id="L259" title="All 2 branches missed.">        if (relationRepo.findByCoachAndAthlete(coach, athlete).isPresent()) {</span>
+<span class="nc" id="L260">            return ResponseEntity.status(HttpStatus.CONFLICT).body(&quot;Relation already exists&quot;);</span>
+        }
+
+<span class="nc" id="L263">        Status pending = statusRepo.findByStatusName(&quot;pending&quot;)</span>
+<span class="nc" id="L264">                .orElseGet(() -&gt; statusRepo.save(new Status(&quot;pending&quot;)));</span>
+
+<span class="nc" id="L266">        relationRepo.save(new CoachAthleteRelation(coach, athlete, pending));</span>
+<span class="nc" id="L267">        return ResponseEntity.status(HttpStatus.CREATED).body(&quot;Athlete linked with status 'pending'&quot;);</span>
+    }
+
+    // ===== UPDATE relation status =====
+    @PutMapping(&quot;/{coachId}/athletes/{athleteId}/status/{statusName}&quot;)
+    public ResponseEntity&lt;String&gt; updateRelationStatus(@PathVariable Integer coachId,
+                                                       @PathVariable Integer athleteId,
+                                                       @PathVariable String statusName) {
+<span class="nc" id="L275">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="nc" id="L276">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+<span class="nc" id="L277">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="nc" id="L278">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+<span class="nc" id="L280">        CoachAthleteRelation relation = relationRepo.findByCoachAndAthlete(coach, athlete)</span>
+<span class="nc" id="L281">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Relation not found&quot;));</span>
+
+<span class="nc" id="L283">        Status status = statusRepo.findByStatusName(statusName)</span>
+<span class="nc" id="L284">                .orElseGet(() -&gt; statusRepo.save(new Status(statusName)));</span>
+
+<span class="nc" id="L286">        relation.setStatus(status);</span>
+<span class="nc" id="L287">        relationRepo.save(relation);</span>
+
+<span class="nc" id="L289">        return ResponseEntity.ok(&quot;Relation status updated to '&quot; + statusName + &quot;'&quot;);</span>
+    }
+
+    // ===== UNLINK athlete =====
+    @DeleteMapping(&quot;/{coachId}/athletes/{athleteId}&quot;)
+    public ResponseEntity&lt;String&gt; unlinkAthlete(
+            @PathVariable Integer coachId,
+            @PathVariable Integer athleteId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+
+<span class="nc bnc" id="L299" title="All 2 branches missed.">        if (userDetails == null)</span>
+<span class="nc" id="L300">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Not logged in&quot;);</span>
+
+        // Fetch logged-in user
+<span class="nc" id="L303">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="nc" id="L304">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+
+        // Fetch coach
+<span class="nc" id="L307">        Coach coach = coachRepo.findById(coachId)</span>
+<span class="nc" id="L308">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;));</span>
+
+        // 🔒 Security: Logged-in user must be the same coach
+<span class="nc bnc" id="L311" title="All 2 branches missed.">        if (!coach.getUserId().equals(user.getId())) {</span>
+<span class="nc" id="L312">            throw new ResponseStatusException(HttpStatus.FORBIDDEN, &quot;You cannot delete athletes for another coach.&quot;);</span>
+        }
+
+        // Fetch athlete
+<span class="nc" id="L316">        Athlete athlete = athleteRepo.findById(athleteId)</span>
+<span class="nc" id="L317">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+
+        // Delete relation if present
+<span class="nc" id="L320">        relationRepo.findByCoachAndAthlete(coach, athlete)</span>
+<span class="nc" id="L321">                .ifPresent(relationRepo::delete);</span>
+
+<span class="nc" id="L323">        return ResponseEntity.ok(&quot;Athlete unlinked successfully&quot;);</span>
+    }
+
+
+    // ===== DELETE coach =====
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;String&gt; deleteCoach(@PathVariable Integer id) {
+<span class="pc bpc" id="L330" title="1 of 2 branches missed.">        if (!coachRepo.existsById(id))</span>
+<span class="nc" id="L331">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Coach not found&quot;);</span>
+
+<span class="fc" id="L333">        coachRepo.deleteById(id);</span>
+<span class="fc" id="L334">        return ResponseEntity.ok(&quot;Coach deleted successfully&quot;);</span>
+    }
+    @GetMapping(&quot;/me&quot;)
+    public ResponseEntity&lt;?&gt; getLoggedCoach(@AuthenticationPrincipal UserDetails userDetails) {
+<span class="fc bfc" id="L338" title="All 2 branches covered.">        if (userDetails == null) {</span>
+<span class="fc" id="L339">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(&quot;User not authenticated&quot;);</span>
+        }
+
+        // Find the logged-in user
+<span class="fc" id="L343">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="pc" id="L344">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;User not found&quot;));</span>
+
+        // Find coach linked to this user
+<span class="fc" id="L347">        Coach coach = coachRepo.findByUserId(user.getId())</span>
+<span class="pc" id="L348">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN, &quot;No coach found for this account&quot;));</span>
+
+<span class="fc" id="L350">        return ResponseEntity.ok(coach);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

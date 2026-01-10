@@ -51,72 +51,69 @@ public class AthleteController {
         this.coachRepo = coachRepo;
     }
 
-    
+    // ===== GET all athletes =====
     @GetMapping
     public List<Athlete> all() {
         return repo.findAll();
     }
 
-    
     @GetMapping("/{id}")
-    public Athlete getById(
+    public ResponseEntity<Athlete> getById(
             @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-
-        
-        if (userDetails == null)
+        if (userDetails == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not logged in");
+        }
 
-        
         User user = userRepo.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
 
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        Athlete athlete = repo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        boolean isAthlete = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ATHLETE"));
+        // ADMIN → always allowed
+        if (userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return ResponseEntity.ok(athlete);
+        }
 
-        boolean isCoach = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_COACH"));
+        // ATHLETE → only self
+        if (userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ATHLETE"))) {
 
-       
-        if (isCoach && !isAdmin) {
+            Athlete logged = repo.findByUserId(user.getId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
 
-            
+            if (!logged.getId().equals(id)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+            return ResponseEntity.ok(athlete);
+        }
+
+        // COACH → must be linked
+        if (userDetails.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_COACH"))) {
+
             Coach coach = coachRepo.findByUserId(user.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Coach profile not found"));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN));
 
-            
-            boolean isLinked = relationRepo.existsByCoachIdAndAthleteIdAndStatusId(
-                    coach.getId(), id, 1
-            );
+            boolean linked = relationRepo
+                    .existsByCoachIdAndAthleteIdAndStatusId(coach.getId(), athlete.getId(), 1);
 
-            if (!isLinked) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "You are not linked to this athlete.");
+            if (!linked) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
+
+            return ResponseEntity.ok(athlete);
         }
 
-        
-        if (isAthlete && !isAdmin) {
-            Athlete loggedAthlete = repo.findByUserId(user.getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Athlete profile not found"));
-
-            if (!loggedAthlete.getId().equals(id)) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN,
-                        "You cannot access another athlete's profile.");
-            }
-        }
-
-        
-        return repo.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Athlete not found"));
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN);
     }
 
 
-    
+
+    // ===== CREATE new athlete =====
     @PostMapping
     public Athlete create(@RequestBody Map<String, Object> body) {
         Athlete athlete = new Athlete();
@@ -141,7 +138,7 @@ public class AthleteController {
         return repo.save(athlete);
     }
 
-    
+    // ===== UPDATE athlete =====
     @PutMapping("/{id}")
     public Athlete update(@PathVariable Integer id, @RequestBody Map<String, Object> body) {
         Athlete athlete = repo.findById(id)
@@ -168,7 +165,7 @@ public class AthleteController {
         return repo.save(athlete);
     }
 
-    
+    // ===== DELETE athlete =====
     @DeleteMapping("/{id}")
     public String delete(@PathVariable Integer id) {
         if (!repo.existsById(id))
@@ -177,7 +174,7 @@ public class AthleteController {
         return "Athlete deleted successfully";
     }
 
-    
+    // ===== GET all coaches linked to this athlete =====
     @GetMapping("/{id}/coaches")
     public List<Coach> getCoachesByAthlete(@PathVariable Integer id) {
         Athlete athlete = repo.findById(id)
@@ -185,7 +182,7 @@ public class AthleteController {
         return new ArrayList<>(athlete.getCoaches());
     }
 
-    
+    // ===== GET athlete by user_id =====
     @GetMapping("/by-user/{userId}")
     public ResponseEntity<Athlete> getByUserId(@PathVariable Integer userId) {
         Athlete athlete = repo.findByUserId(userId)
@@ -193,7 +190,7 @@ public class AthleteController {
         return ResponseEntity.ok(athlete);
     }
 
-    
+    // ===== GET coaches by athlete's decision (accept/reject/pending) =====
     @GetMapping("/{athleteId}/coaches/decision/{status}")
     public ResponseEntity<List<Map<String, Object>>> getCoachesByAthleteDecision(
             @PathVariable Integer athleteId,

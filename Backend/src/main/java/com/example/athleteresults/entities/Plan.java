@@ -32,7 +32,7 @@ public class Plan {
     @Column(name = "notes")
     private String notes;
 
-    //Konstruktoret
+    // ===== Constructors =====
     public Plan() {}
 
     public Plan(Athlete athlete, Coach coach, LocalDate planDate, String predictionPlan, String actualPlan, String notes) {
@@ -44,7 +44,7 @@ public class Plan {
         this.notes = notes;
     }
 
-    //Getters dhe Setters
+    // ===== Getters & Setters =====
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

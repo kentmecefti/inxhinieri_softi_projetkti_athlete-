@@ -18,20 +18,20 @@ public class ReflexMetricController {
         this.reflexMetricRepository = reflexMetricRepository;
     }
 
-    
+    // ✅ GET all reflex metrics for a given gym session
     @GetMapping
     public List<ReflexMetric> getByGym(@RequestParam Integer gymId) {
         return reflexMetricRepository.findByGymSessionId(gymId);
     }
 
-    
+    // ✅ POST create new reflex metric
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ReflexMetric create(@RequestBody ReflexMetric metric) {
         return reflexMetricRepository.save(metric);
     }
 
-    
+    // ✅ DELETE a reflex metric by ID
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
