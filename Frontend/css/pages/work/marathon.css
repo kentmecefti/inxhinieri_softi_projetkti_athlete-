@@ -1,0 +1,564 @@
+:root {
+  --bg: #eef6fb;
+  --card: #ffffffcc;
+  --text: #1f2d3d;
+  --accent: #3a8dde;
+  --accent-dark: #2563eb;
+  --border: #d0e3f1;
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* ===== BASE ===== */
+* { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== HEADER ===== */
+/* FORCE HEADER CENTER TO SPAN FULL WIDTH */
+.header-main {
+  grid-column: 1 / -1;
+  justify-self: center;
+  text-align: center;
+}
+
+/* EXTRA SAFETY */
+.title-block {
+  width: 100%;
+  text-align: center;
+}
+
+.topbar {
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: #fff;
+  text-align: center;
+  padding: 18px;
+  box-shadow: 0 4px 12px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.8em;
+  letter-spacing: 0.5px;
+}
+
+.topbar p { margin: 4px 0 0; opacity: 0.9; font-size: 0.95em; }
+
+.btn.back {
+  position: absolute;
+  left: 15px;
+  top: 14px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 1.1em;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s;
+}
+.btn.back:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
+
+/* ===== STATS ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 25px 20px;
+}
+
+.stat {
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 3px 8px var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.2s;
+}
+.stat:hover { transform: translateY(-3px); }
+.stat h3 { color: var(--accent); margin: 0; font-size: 1em; font-weight: 600; }
+
+/* ===== SETTINGS ===== */
+.settings {
+  text-align: center;
+  margin: 10px 0 25px;
+}
+.settings input {
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  width: 110px;
+  margin-left: 6px;
+  font-size: 0.95em;
+}
+
+/* ===== SESSIONS ===== */
+.sessions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 0 24px 100px;
+}
+
+.session-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 3px 10px var(--shadow);
+  animation: fadeIn 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+.session-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 5px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-dark) 100%);
+}
+
+.session-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 5px 14px var(--shadow);
+}
+
+.session-card h3 { color: var(--accent-dark); margin-top: 4px; }
+.session-card p { margin: 4px 0; }
+.session-card small { color: #6b7c93; display: block; margin-top: 6px; }
+.session-card .note { font-style: italic; color: #4a5568; }
+
+.session-card .actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+.session-card button.danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.session-card button.danger:hover { background: #c0392b; }
+
+.empty {
+  text-align: center;
+  opacity: 0.6;
+  padding: 30px;
+  font-style: italic;
+}
+
+/* ===== HIDE INTERNAL IDs ===== */
+[id*="Id"], [data-type="id"], .athlete-id {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* ===== FLOATING BUTTON ===== */
+.fab {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  font-size: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 6px 16px var(--shadow);
+  transition: background 0.25s ease, transform 0.2s;
+}
+.fab:hover { background: var(--accent-dark); transform: scale(1.05); }
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  animation: fadeIn 0.3s ease;
+}
+.hidden { display: none; }
+
+.modal-content {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 4px 16px var(--shadow);
+  transition: transform 0.25s ease;
+}
+.modal-content h2 { color: var(--accent); margin-top: 0; text-align: center; }
+
+/* ===== FORM ===== */
+form { display: flex; flex-direction: column; gap: 12px; }
+
+input, select, textarea {
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.95em;
+  background: #fff;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+textarea { resize: vertical; min-height: 70px; }
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+}
+button.save {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button.save:hover { background: var(--accent-dark); }
+button.cancel {
+  background: #d3d7dc;
+  color: #000;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button.cancel:hover { background: #bbb; }
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .modal-content { max-width: 92%; }
+  .fab { width: 52px; height: 52px; font-size: 24px; }
+  .topbar h1 { font-size: 1.5em; }
+}
+/* ===== CALENDAR FILTER ===== */
+.calendar-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card, #fff);
+  border: 1px solid var(--border, #ddd);
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  flex-wrap: wrap; /* allows stacking on small screens */
+  justify-content: center;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== LABEL ===== */
+.calendar-filter label {
+  font-weight: 600;
+  color: var(--text, #2c2341);
+}
+
+/* ===== DATE INPUT ===== */
+.calendar-filter input[type="date"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--bg, #f9f9fc);
+  border: 1.5px solid var(--border, #ccc);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  color: var(--text, #2c2341);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  min-width: 150px;
+}
+
+.calendar-filter input[type="date"]:focus {
+  outline: none;
+  border-color: var(--accent, #6d28d9);
+  box-shadow: 0 0 0 3px var(--accent-light, #ede9fe);
+}
+
+/* Calendar icon style (Chrome, Edge, Safari) */
+.calendar-filter input[type="date"]::-webkit-calendar-picker-indicator {
+  background: var(--accent, #6d28d9);
+  color: white;
+  border-radius: 6px;
+  padding: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.calendar-filter input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background: var(--accent-light, #a78bfa);
+}
+
+/* ===== BUTTON ===== */
+.calendar-filter button {
+  background: linear-gradient(135deg, var(--accent, #6d28d9), var(--accent-dark, #9333ea));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.calendar-filter button:hover {
+  background: linear-gradient(135deg, var(--accent-light, #8b5cf6), var(--accent, #6d28d9));
+}
+
+/* ===== MOBILE OPTIMIZATION ===== */
+@media (max-width: 600px) {
+  .calendar-filter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .calendar-filter label {
+    text-align: center;
+  }
+
+  .calendar-filter input[type="date"],
+  .calendar-filter button {
+    width: 100%;
+    font-size: 1.1rem;
+  }
+}
+/* ===== OVERLAY (background dim) ===== */
+.alert-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: none; /* hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* ===== MODAL BOX ===== */
+.alert-modal {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 15px;
+  width: 340px;
+  max-width: 90%;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.25s ease-out;
+}
+
+/* ===== SHOW ACTIVE STATE ===== */
+.alert-overlay.show {
+  display: flex;
+}
+
+.alert-overlay.show .alert-modal {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Optional Button */
+.alert-modal button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4a4aff;
+  color: white;
+  cursor: pointer;
+  font-size: 15px;
+}
+/* =====================================================
+   📱 MOBILE-FRIENDLY MODAL FORM
+===================================================== */
+@media (max-width: 600px) {
+
+  /* Modal container */
+  .modal {
+    align-items: flex-end; /* slide-up style feel */
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: 92dvh;
+    border-radius: 18px 18px 0 0;
+    padding: 18px 16px 20px;
+    overflow-y: auto;
+  }
+
+  /* Title */
+  .modal-content h2 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+  }
+
+  /* Labels stack better */
+  form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.95rem;
+  }
+
+  /* Inputs & selects full width */
+  form input,
+  form select,
+  form textarea {
+    width: 100%;
+    font-size: 1rem;
+    padding: 11px 12px;
+    border-radius: 10px;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
+  /* Buttons stack vertically */
+  .buttons {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .buttons button {
+    width: 100%;
+    font-size: 1.05rem;
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  /* Save button emphasis */
+  button.save {
+    font-weight: 700;
+  }
+
+  /* Cancel button softer */
+  button.cancel {
+    background: #e5e7eb;
+  }
+}
+/* =====================================================
+   🖥️ DESKTOP-FRIENDLY MODAL FORM
+===================================================== */
+
+.modal {
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 520px;
+  padding: 26px 28px 28px;
+  border-radius: 18px;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* Title */
+.modal-content h2 {
+  font-size: 1.45rem;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+/* Form structure */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Label + input layout */
+form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+/* Inputs */
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border-radius: 9px;
+}
+
+/* Notes area */
+textarea {
+  min-height: 80px;
+}
+
+/* Buttons row */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+/* Buttons */
+.buttons button {
+  flex: 1;
+  padding: 11px 14px;
+  font-size: 0.95rem;
+  border-radius: 9px;
+}
+
+/* Save emphasis */
+button.save {
+  font-weight: 700;
+}
+
+/* Cancel softer */
+button.cancel {
+  background: #e5e7eb;
+}

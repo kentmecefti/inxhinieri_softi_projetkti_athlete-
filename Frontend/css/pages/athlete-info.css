@@ -1,0 +1,187 @@
+/* ===========================
+   🏃 ATHLETE / COACH INFO — PRO UI
+=========================== */
+
+:root {
+  --blue-primary: #0f2a44;
+  --blue-accent: #1f4fd8;
+  --blue-hover: #173db5;
+
+  --border-soft: #dbe3ee;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+
+  --bg-card: #ffffff;
+  --shadow-soft: 0 12px 35px rgba(15, 42, 68, 0.14);
+}
+
+/* === PAGE === */
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+/* === CARD === */
+.card {
+  background: var(--bg-card);
+  width: 90%;
+  max-width: 740px;
+  border-radius: 18px;
+  padding: 30px 36px;
+  box-shadow: var(--shadow-soft);
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+/* === FORM GRID === */
+form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 26px;
+}
+
+/* === FORM GROUP === */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+/* === LABELS === */
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+/* === INPUTS === */
+input,
+select {
+  padding: 9px 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--blue-accent);
+  box-shadow: 0 0 0 3px rgba(31, 79, 216, 0.18);
+  outline: none;
+}
+
+input[readonly] {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+/* PRIMARY (Update Athlete / Coach) */
+button[type="submit"] {
+  grid-column: 1 / -1;
+  margin-top: 14px;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--blue-accent), var(--blue-primary));
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(31, 79, 216, 0.35);
+}
+
+/* SECONDARY (Change Password) */
+.btn {
+  background: transparent;
+  color: var(--blue-accent);
+  border: 1px solid var(--blue-accent);
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn:hover {
+  background: rgba(31, 79, 216, 0.08);
+}
+
+/* MESSAGE */
+.msg {
+  grid-column: 1 / -1;
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--blue-accent);
+}
+
+/* === MOBILE === */
+@media (max-width: 600px) {
+  form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================
+   PASSWORD MODAL
+=========================== */
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 42, 68, 0.6);
+  z-index: 9999;
+}
+
+.modal-content {
+  background: #fff;
+  width: 320px;
+  margin: 10% auto;
+  padding: 26px 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(15, 42, 68, 0.35);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--blue-primary);
+}
+
+.close {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* SAVE PASSWORD BUTTON */
+.btn-save {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px;
+  background: var(--blue-accent);
+  border: none;
+  border-radius: 9px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background: var(--blue-hover);
+}

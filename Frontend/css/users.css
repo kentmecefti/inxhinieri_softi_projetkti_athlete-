@@ -1,0 +1,495 @@
+/* =========================================================
+   🎨 GLOBAL THEME VARIABLES
+========================================================= */
+:root {
+  --bg: #eef3fa;
+  --card: #ffffffee;
+  --text: #1f2d3d;
+  --muted: #6b7c93;
+  --border: #d0d7e2;
+
+  --blue: #2563eb;
+  --blue-dark: #1d4ed8;
+
+  --green: #27ae60;
+  --green-dark: #1f8a4a;
+
+  --danger: #e74c3c;
+
+  --shadow: rgba(0, 0, 0, 0.08);
+
+  --sidebar-width: 280px;
+}
+
+/* =========================================================
+   BASE RESET & BACKGROUND
+========================================================= */
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background:
+          linear-gradient(rgba(0, 0, 0, 0.25), rgba(0,0,0,0.25)),
+          url("../images/blue_track.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  margin: 0;
+  color: var(--text);
+
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+/* =========================================================
+   TEXT COLOR BY ROLE — Athlete = Blue, Coach = Green
+========================================================= */
+
+/* Row = Athlete */
+.role-athlete td {
+  color: #2563eb !important;       /* blue */
+}
+
+/* Row = Coach */
+.role-coach td {
+  color: #27ae60 !important;       /* green */
+}
+
+/* Keep the header white */
+table.dataTable thead th {
+  color: white !important;
+}
+
+/* =========================================================
+   DESKTOP SIDEBAR SHIFT
+========================================================= */
+@media (min-width: 992px) {
+  main {
+    margin-left: var(--sidebar-width) !important;
+    transition: margin-left .35s ease;
+  }
+}
+
+@media (max-width: 991px) {
+  main { margin-left: 0 !important; }
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+header {
+  /*background: linear-gradient(90deg, var(--blue-dark), #153e90);*/
+  background: linear-gradient(180deg, #21327f 0%, #1e6187 60%, #2ea8cc 100% 100%);
+  color: #fff;
+  padding: 16px 22px;
+  /*border-radius: 12px;*/
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  box-shadow: 0 4px 10px var(--shadow);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.45rem;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* =========================================================
+   SEARCH BAR / FILTER BAR
+========================================================= */
+.bar {
+  background: var(--card);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.bar input[type="search"] {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.bar input[type="search"]:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px #60a5fa55;
+}
+
+/* =========================================================
+   KPI CARDS
+========================================================= */
+.kpis {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.kpi {
+  background: linear-gradient(135deg, #1b5dd8, #1246b0);
+  padding: 12px 16px;
+  border-radius: 12px;
+
+  color: white;
+  min-width: 90px;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+  transition: .25s ease;
+
+  box-shadow: 0 3px 12px rgba(27,93,216,0.35);
+}
+
+.kpi:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.15);
+}
+
+.kpi.active {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  box-shadow: 0 4px 16px rgba(39,174,96,0.4);
+}
+
+.kpi b {
+  display: block;
+  font-size: 1.3rem;
+}
+
+/* =========================================================
+   FILTER TABS
+========================================================= */
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tab {
+  padding: 7px 14px;
+  font-weight: 600;
+  color: white;
+  border-radius: 8px;
+  border: none;
+
+  background: linear-gradient(135deg, #1b5dd8, #1246b0);
+  transition: .25s ease;
+  cursor: pointer;
+
+  box-shadow: 0 2px 5px var(--shadow);
+}
+
+.tab:hover {
+  filter: brightness(1.15);
+}
+
+.tab.active {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  box-shadow: 0 0 12px rgba(39,174,96,0.35);
+}
+
+/* =========================================================
+   DATATABLE
+========================================================= */
+table.dataTable {
+  background: rgba(255,255,255,0.88);
+  /*border-radius: 14px;*/
+  overflow: hidden;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+table.dataTable thead {
+  background: linear-gradient(180deg, #21327f 0%, #1e6187 60%, #2ea8cc 100% 100%);
+  /*background: linear-gradient(135deg, #1e40af, #132e73);*/
+  color: white;
+}
+
+table.dataTable tbody tr {
+  transition: 0.25s;
+}
+
+table.dataTable tbody tr:hover {
+  background: rgba(225,235,255,0.9);
+}
+
+/* =========================================================
+   ROLE COLORS — NAMES
+========================================================= */
+.role-athlete td:nth-child(2) {
+  color: #2563eb !important; /* blue */
+  font-weight: 600;
+}
+
+.role-coach td:nth-child(2) {
+  color: #27ae60 !important; /* green */
+  font-weight: 600;
+}
+
+/* =========================================================
+   ROLE BADGES
+========================================================= */
+.badge.athlete {
+  background: #2563eb !important;
+  color: #fff !important;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.badge.coach {
+  background: #27ae60 !important;
+  color: #fff !important;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+.badge.active {
+  background: #27ae60;
+  padding: 4px 8px;
+  color: white;
+  border-radius: 6px;
+}
+
+.badge.inactive {
+  background: #e74c3c;
+  padding: 4px 8px;
+  color: white;
+  border-radius: 6px;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+.btn.small {
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  border-radius: 8px;
+  border: none;
+  margin: 2px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  color: #fff;
+  transition: .25s ease;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+.btn.small:hover {
+  transform: translateY(-2px);
+}
+
+/* Blue */
+.btn.small.blue {
+  background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+}
+.btn.small.blue:hover {
+  background: linear-gradient(135deg, #3b82f6, #1e40af);
+}
+
+/* Green */
+.btn.small.green {
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+}
+.btn.small.green:hover {
+  background: linear-gradient(135deg, #34d399, #15803d);
+}
+
+/* Success */
+.btn.small.success {
+  background: linear-gradient(135deg, #2ecc71, #239b56);
+}
+
+/* Danger */
+.btn.small.danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* Disabled */
+.btn.small.muted {
+  background: rgba(255,255,255,0.3);
+  color: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Keep action buttons on one line */
+table.dataTable td:last-child {
+  white-space: nowrap;
+}
+
+/* =========================================================
+   EMPTY & ERROR STATES
+========================================================= */
+.err-box {
+  background: #ffecec;
+  border: 1px solid #f5a3a3;
+  padding: 14px;
+  border-radius: 8px;
+  color: #8a1f1f;
+  margin-top: 14px;
+}
+
+.muted {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 800px) {
+  header { flex-direction: column; text-align: center; }
+  .bar { flex-direction: column; }
+  .kpis { justify-content: center; }
+}
+/* =========================================================
+   📱 MOBILE OPTIMIZATION
+========================================================= */
+@media (max-width: 600px) {
+
+  /* ===== BODY / LAYOUT ===== */
+  body {
+    flex-direction: column;
+    background-attachment: fixed;
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 12px !important;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    padding: 14px 16px;
+    gap: 8px;
+    text-align: center;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  /* ===== SEARCH / FILTER BAR ===== */
+  .bar {
+    padding: 12px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .bar input[type="search"] {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 9px 12px;
+  }
+
+  /* ===== KPI CARDS ===== */
+  .kpis {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .kpi {
+    min-width: 80px;
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  .kpi b {
+    font-size: 1.1rem;
+  }
+
+  /* ===== FILTER TABS ===== */
+  .tabs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .tab {
+    padding: 6px 12px;
+    font-size: 0.82rem;
+    border-radius: 7px;
+  }
+
+  /* ===== DATATABLE ===== */
+  table.dataTable {
+    font-size: 0.82rem;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+  }
+
+  table.dataTable thead {
+    font-size: 0.78rem;
+  }
+
+  table.dataTable td,
+  table.dataTable th {
+    padding: 8px 6px;
+  }
+
+  /* Enable horizontal scroll safely */
+  .dataTables_wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ===== ACTION BUTTONS ===== */
+  .btn.small {
+    padding: 5px 9px;
+    font-size: 0.75rem;
+    border-radius: 7px;
+  }
+
+  /* Stack buttons vertically if many */
+  table.dataTable td:last-child {
+    white-space: normal;
+  }
+
+  /* ===== BADGES ===== */
+  .badge {
+    font-size: 0.72rem;
+    padding: 3px 7px;
+    border-radius: 6px;
+  }
+
+  /* ===== ERROR / EMPTY STATES ===== */
+  .err-box {
+    font-size: 0.85rem;
+    padding: 12px;
+  }
+}
+@media (max-width: 600px) {
+  span.badge {
+    margin: 3px 6px;
+  }
+}
+table.dataTable td span.badge {
+  margin-right: 6px;
+  margin-bottom: 4px;
+}
+span.badge {
+  display: inline-block;
+  margin: 2px 6px 2px 0; /* space between badges */
+}

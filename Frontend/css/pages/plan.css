@@ -1,0 +1,582 @@
+/* =====================================================
+   BLUE DASHBOARD THEME + PLANS TAB (GLASS STYLE)
+===================================================== */
+
+:root {
+  --bg: #f4f7ff;
+  --card: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #d0d7e2;
+  --blue: #2563eb;
+  --blue-light: #3b82f6;
+  --green: #44bd32;
+  --green-light: #5cd850;
+  --shadow: rgba(0, 0, 0, 0.12);
+  --hover: rgba(37, 99, 235, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  transition: all 0.2s ease-in-out;
+}
+
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #f3f6ff, #eef3fa);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Optional wrapper if you use it */
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== HEADER ===== */
+.topbar {
+  background: var(--card);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 3px 10px var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.topbar-left,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  color: var(--blue);
+}
+
+.topbar-subtitle {
+  margin: 2px 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Small pill badge to show mode (Coach / Athlete / Preview) */
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--blue);
+}
+
+/* ===== CONTROLS (right side) ===== */
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Week picker */
+.week-picker,
+#weekPicker {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.week-picker:focus,
+#weekPicker:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px var(--shadow);
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  left:10px;
+}
+
+.btn.blue { background: var(--blue); color: #fff; }
+.btn.green { background: var(--green); color: #fff; }
+
+.btn.ghost {
+  background: transparent;
+  color: var(--blue);
+  border: 1.5px solid var(--blue);
+  box-shadow: none;
+}
+
+.btn.blue:hover { background: var(--blue-light); transform: translateY(-2px); }
+.btn.green:hover { background: var(--green-light); transform: translateY(-2px); }
+.btn.ghost:hover { background: var(--hover); }
+
+.btn:active {
+  transform: scale(0.96);
+  opacity: 0.9;
+}
+
+/* Toggle athletes button specific (if not using .btn) */
+#toggleAthletesBtn {
+  white-space: nowrap;
+}
+
+/* ===== MAIN ===== */
+main {
+  padding: 24px;
+  overflow-x: auto;
+}
+
+/* To keep content centered on large screens */
+main > .content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ===== PLAN ACTIONS (Send buttons) ===== */
+.plan-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  box-shadow: 0 4px 12px var(--shadow);
+  border-radius: 10px;
+  overflow: hidden;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+th,
+td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  font-size: 0.92rem;
+}
+
+th {
+  background: #f8fafc;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+tr:hover td {
+  background: var(--hover);
+}
+
+/* Make the first column (date / checkbox) a bit narrower */
+th:first-child,
+td:first-child {
+  width: 80px;
+  white-space: nowrap;
+}
+
+/* Day column */
+th:nth-child(3),
+td:nth-child(3) {
+  white-space: nowrap;
+}
+
+/* Read-only text (when no textarea) */
+td em {
+  color: var(--muted);
+  font-style: italic;
+}
+
+/* =====================================================
+   TEXTAREA (editable cells)
+===================================================== */
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 8px;
+  font-size: 0.95rem;
+  background: #fff;
+  color: var(--text);
+}
+
+textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+/* Slight visual hint that these are editable */
+textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background: var(--blue);
+  color: white;
+  padding: 12px 22px;
+  border-radius: 10px;
+  opacity: 0;
+  font-weight: 500;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: opacity 0.4s ease, transform 0.3s ease;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* =====================================================
+   SEARCHABLE DROPDOWN (Coach mode)
+===================================================== */
+
+.dropdown-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  background: var(--card);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+  margin-top: 12px;
+}
+
+.dropdown-label {
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.dropdown-search {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+}
+
+.dropdown-search:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.dropdown-list {
+  max-height: 210px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #f9fbff;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.dropdown-item:hover {
+  background: var(--hover);
+}
+
+.dropdown-item.selected {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+/* Hide dropdown by default on small screens if you want;
+   JS will toggle display style */
+@media (max-width: 768px) {
+  .dropdown-container {
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   LOADING OVERLAY
+===================================================== */
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #2563eb33;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-overlay p {
+  margin-top: 14px;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+  .topbar {
+    gap: 10px;
+  }
+
+  .topbar-left,
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  main {
+    padding: 16px;
+  }
+
+  th, td {
+    padding: 10px;
+  }
+}
+/* =====================================================
+   📱 MOBILE OPTIMIZATION — PHONE FRIENDLY
+===================================================== */
+@media (max-width: 640px) {
+
+  /* ===== BODY ===== */
+  body {
+    background: linear-gradient(180deg, #f3f6ff, #eef3fa);
+  }
+
+  /* ===== TOPBAR ===== */
+  .topbar {
+    padding: 10px 14px;
+    gap: 8px;
+  }
+
+  .topbar h2 {
+    font-size: 1.05rem;
+  }
+
+  .topbar-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .mode-badge {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+  }
+
+  /* Stack controls nicely */
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ===== MAIN ===== */
+  main {
+    padding: 12px;
+  }
+
+  /* ===== TABLE ===== */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 12px;
+  }
+
+  th,
+  td {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* Make first column tighter */
+  th:first-child,
+  td:first-child {
+    width: 60px;
+  }
+
+  /* ===== TEXTAREA ===== */
+  textarea {
+    min-height: 80px;
+    font-size: 0.9rem;
+    padding: 10px;
+    border-radius: 8px;
+  }
+
+  /* ===== DROPDOWN ===== */
+  .dropdown-container {
+    max-width: 100%;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .dropdown-search {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+  }
+
+  .dropdown-item {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    bottom: 16px;
+    width: calc(100% - 32px);
+    max-width: none;
+    font-size: 0.85rem;
+    padding: 12px 16px;
+    border-radius: 12px;
+  }
+
+  /* ===== LOADING OVERLAY ===== */
+  .loading-overlay p {
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 0 16px;
+  }
+}
+@media (max-width: 640px) {
+  tr {
+    cursor: pointer;
+  }
+}
+/* Selected row highlight */
+tr.row-selected {
+  background: rgba(37, 99, 235, 0.12);
+  outline: 2px solid rgba(37, 99, 235, 0.4);
+}
+
+/* Cursor hint */
+tbody tr {
+  cursor: pointer;
+}
+/* ===== TOP ACTION ROW ===== */
+.top-action-row {
+  display: flex;
+  align-items: center;
+  /*justify-content: space-between;*/
+  gap: 14px;
+  margin: 18px 0;
+}
+
+/* Keep buttons aligned */
+.coach-actions,
+.plan-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hint cleanup */
+.hint {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 10px;
+}
+
+/* ===== MOBILE STACK ===== */
+@media (max-width: 768px) {
+  .top-action-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .coach-actions,
+  .plan-actions {
+    justify-content: center;
+  }
+}
+

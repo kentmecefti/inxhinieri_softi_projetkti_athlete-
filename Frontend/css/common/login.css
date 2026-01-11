@@ -1,0 +1,238 @@
+/* ============================================================
+   🔵 AUTH PAGE BASE
+============================================================ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url("../../images/track_bck.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100vh;
+  color: #fff;
+}
+
+/* ============================================================
+   🔷 AUTH CONTAINER (Glassmorphism Upgrade)
+============================================================ */
+.auth-container {
+  width: 100%;
+  max-width: 380px;
+  padding: 2rem;
+
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(14px);
+
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.25);
+
+  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  text-align: center;
+
+  animation: fadeIn 0.5s ease;
+}
+
+.auth-container h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.8rem;
+  text-shadow: 0 0 6px rgba(0,0,0,0.45);
+}
+
+/* ============================================================
+   📝 FORM
+============================================================ */
+.auth-form .form-group {
+  margin-bottom: 1.3rem;
+  text-align: left;
+  position: relative;
+}
+
+.auth-form label {
+  font-size: 0.92rem;
+  margin-bottom: 0.4rem;
+  display: block;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+/* Better contrast for inputs */
+.auth-form input,
+.auth-form select {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+
+  border: none;
+  border-radius: 10px;
+  outline: none;
+
+  background: rgba(255,255,255,0.9);
+  color: #202020;
+
+  transition: 0.15s ease;
+}
+
+.auth-form input::placeholder {
+  color: #7d7d7d;
+}
+
+.auth-form input:focus,
+.auth-form select:focus {
+  box-shadow: 0 0 0 2px rgba(46,157,67,0.7);
+}
+
+/* Password eye icon */
+.eye-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+/* ============================================================
+   🟢 PRIMARY BUTTON (Upgraded)
+============================================================ */
+.btn-primary {
+  width: 100%;
+  padding: 0.85rem;
+
+  background: linear-gradient(135deg, #20ad41, #1b9437);
+  border: none;
+  border-radius: 10px;
+
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+  box-shadow: 0 6px 14px rgba(22,130,32,0.35);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4ade80, #2f9e57);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   🔁 SWITCH LOGIN/SIGNUP LINK
+============================================================ */
+.switch-auth {
+  margin-top: 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+  text-shadow: 0 0 4px rgba(0,0,0,0.35);
+}
+
+.switch-auth a {
+  color: #fff;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.switch-auth a:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+/* ============================================================
+   ✨ ANIMATIONS
+============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   📱 RESPONSIVE (Improved)
+============================================================ */
+@media (max-width: 480px) {
+  .auth-container {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .auth-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .btn-primary {
+    padding: 0.75rem;
+  }
+}
+
+/* ============================================================
+   ⚠ CUSTOM ALERT OVERLAY (unchanged)
+============================================================ */
+.custom-alert-overlay {
+  position: fixed;
+  top: 0; left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: rgba(0,0,0,0.45);
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999999;
+}
+
+.custom-alert-overlay.show {
+  display: flex;
+}
+
+/* ALERT BOX */
+.custom-alert-box {
+  width: 300px;
+  padding: 22px 30px;
+
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+
+  box-shadow: 0 7px 20px rgba(0,0,0,0.3);
+
+  opacity: 0;
+  transform: scale(0.9);
+  transition: 0.2s ease;
+}
+
+.custom-alert-overlay.show .custom-alert-box {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.custom-alert-box button {
+  margin-top: 15px;
+  padding: 8px 18px;
+
+  background: #4a45ff;
+  color: white;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}

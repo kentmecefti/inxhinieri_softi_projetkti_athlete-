@@ -1,0 +1,267 @@
+/* =====================================================
+   🎨 GLOBAL VARIABLES
+===================================================== */
+:root {
+  --bg: #edf2f9;
+  --card: #ffffffee;
+  --text: #1f2d3d;
+  --muted: #6b7c93;
+  --border: #d0d7e2;
+
+  --blue: #2563eb;
+  --blue-dark: #f1f3f4;
+  --green: #44bd32;
+  --green-dark: #2d9f25;
+  --danger: #e74c3c;
+
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+/* =====================================================
+   🧱 BASE STYLES
+===================================================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background-image:
+          linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
+          url("../images/sunny_track.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  margin: 0;
+  padding: 48px 20px;
+
+  min-height: 100vh;
+  color: var(--text);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   📦 MAIN CONTAINER
+===================================================== */
+.container {
+  padding: 40px 32px;
+  border-radius: 22px;
+  box-shadow: 0 10px 28px var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.container:hover {
+  box-shadow: 0 14px 34px rgba(0,0,0,0.12);
+}
+
+/* Desktop sidebar offset */
+@media (min-width: 768px) {
+  .container {
+    margin-left: 280px;
+    max-width: 1200px;
+  }
+}
+
+/* =====================================================
+   🏷️ TITLES
+===================================================== */
+h1 {
+  text-align: center;
+  color: var(--blue-dark);
+  font-weight: 700;
+  margin-bottom: 32px;
+  font-size: 2.1rem;
+}
+
+.menu-title {
+  text-align: center;
+  color: var(--blue-dark);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* =====================================================
+   🔘 BUTTONS
+===================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(19, 225, 61, 0.52), #ccc40c);
+
+  box-shadow:
+          0 6px 16px rgba(37, 99, 235, 0.45),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+  backdrop-filter: blur(6px);
+
+  transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          filter 0.2s ease;
+}
+
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+
+.logout-btn.blue {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+}
+
+/* =====================================================
+   📊 TABS
+===================================================== */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 18px;
+}
+
+.tab {
+  background: rgba(37,99,235,0.1);
+  border: 1px solid var(--blue);
+  color: var(--blue-dark);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: var(--blue);
+  color: #fff;
+}
+
+.tab-content.hidden {
+  display: none;
+}
+
+/* =====================================================
+   🏃 RESULTS GRID
+===================================================== */
+.menu-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.item-btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.item-btn:hover {
+  transform: translateY(-2px);
+}
+
+.item-btn.runner { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+.item-btn.jumper { background: linear-gradient(135deg, #43a047, #2e7d32); }
+.item-btn.throw  { background: linear-gradient(135deg, #e53935, #c62828); }
+.item-btn.gym    { background: linear-gradient(135deg, #f7931e, #f57c00); }
+.item-btn.marathon { background: linear-gradient(135deg, #6dc6ff, #3ea8ff); }
+
+/* =====================================================
+   🔔 TOAST
+===================================================== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--green-dark);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  z-index: 9999;
+}
+
+/* =====================================================
+   🧩 IFRAME SECTIONS — DESKTOP (CARD STYLE)
+===================================================== */
+.iframe-section {
+  height: 97vh;
+  max-height: 97vh;
+  overflow: hidden;
+}
+
+.iframe-section iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 14px;
+}
+
+/* =====================================================
+   📱 MOBILE — TRUE FULLSCREEN IFRAME (MENU VISIBLE)
+===================================================== */
+@media (max-width: 768px) {
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  /* Sidebar & menu always above iframe */
+  .sidebar,
+  .menu-toggle {
+    position: fixed;
+    z-index: 1000000;
+  }
+
+  /* Fullscreen iframe */
+  .iframe-section {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100dvh;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    max-width: none;
+    max-height: none;
+
+    border-radius: 0;
+    box-shadow: none;
+
+    background: #fff;
+    z-index: 1;
+  }
+
+  .iframe-section iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  /* Compact container on mobile */
+  .container {
+    padding: 20px 16px;
+    border-radius: 16px;
+  }
+}

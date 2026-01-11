@@ -1,0 +1,683 @@
+/* =====================================================
+   🌿 EMBEDDED DASHBOARD — IFRAME OPTIMIZED THEME
+===================================================== */
+:root {
+  --bg: #eef5ef;
+  --card: #ffffff;
+  --text: #1c2a1e;
+  --muted: #6b7a6d;
+
+  --accent: #2e7d32;
+  --accent-dark: #256628;
+  --accent-light: #e3f2e4;
+  --accent-grad: linear-gradient(135deg, #2e7d32, #256628);
+
+  --brass: #d6b04e;
+  --brass-light: #f3eab5;
+
+  --border: #d7e3d8;
+  --shadow: rgba(46, 125, 50, 0.08);
+
+  --danger: #e74c3c;
+  --success: #34d399;
+  --warning: #facc15;
+}
+
+/* =====================================================
+   🧱 BASE + BODY (for IFRAME)
+===================================================== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: var(--bg);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+body {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 2px 10px var(--shadow);
+  padding: 1rem;
+}
+
+/* =====================================================
+   🔝 TOPBAR
+===================================================== */
+.topbar {
+  background: var(--accent-grad);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+.topbar h1 {
+  font-size: 1.3rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* =====================================================
+   🔘 BUTTONS
+===================================================== */
+.btn {
+  background: var(--accent-grad);
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.btn:hover { background: var(--accent-dark); }
+
+.big-btn {
+  width: 100%;
+  padding: 20px;
+  font-size: 1.05rem;
+  background: var(--accent-grad);
+  color: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.big-btn:hover {
+  background: var(--accent-dark);
+  transform: translateY(-2px);
+}
+
+/* =====================================================
+   🧭 LAYOUT / CARDS / GRID
+===================================================== */
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  padding: 10px;
+}
+
+section {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 2px 8px var(--shadow);
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease;
+}
+section:hover { transform: translateY(-3px); }
+
+h2 {
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 6px;
+  margin-top: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--accent-dark);
+}
+
+/* =====================================================
+   📑 TABS
+===================================================== */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+.tab {
+  flex: 1;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--accent-light);
+  color: var(--accent-dark);
+  font-weight: 600;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.tab:hover { background: var(--brass-light); }
+.tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* =====================================================
+   📅 PLAN ITEMS
+===================================================== */
+.plan-item {
+  background: var(--accent-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin: 6px 0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.plan-item:hover { background: var(--brass-light); }
+
+/* =====================================================
+   🧑‍🏫 CARD GRID
+===================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px var(--shadow);
+  transition: all 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(46,125,50,0.15);
+}
+.card h3 {
+  margin: 0;
+  color: var(--accent-dark);
+  font-size: 1.05rem;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.actions button {
+  padding: 8px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+.view-btn { background: var(--accent-grad); }
+/* =====================================================
+   🔗 LINK BUTTON – FIXED & POLISHED
+===================================================== */
+.link-btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #34d399, #059669);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 14px;
+  position: relative;
+
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+
+  transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          filter 0.18s ease,
+          opacity 0.18s ease;
+}
+
+/* Shine layer */
+.link-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+          120deg,
+          transparent 20%,
+          rgba(255, 255, 255, 0.35),
+          transparent 80%
+  );
+
+  transform: translateX(-120%);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+/* Hover */
+.link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(5, 150, 105, 0.35);
+  filter: brightness(1.05);
+}
+
+.link-btn:hover::after {
+  transform: translateX(120%);
+}
+
+/* Active */
+.link-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(5, 150, 105, 0.25);
+}
+
+/* Keyboard focus */
+.link-btn:focus-visible {
+  outline: none;
+  box-shadow:
+          0 0 0 3px rgba(52, 211, 153, 0.35),
+          0 4px 10px rgba(5, 150, 105, 0.25);
+}
+
+/* Disabled */
+.link-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: grayscale(0.4);
+}
+
+.link-btn:disabled::after {
+  display: none;
+}
+
+/* =====================================================
+   👤 USERNAME INPUT
+===================================================== */
+.username-input {
+  width: 100%;
+  padding: 10px 12px;
+
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+
+  outline: none;
+
+  transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+}
+
+.username-input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Focus */
+.username-input:focus {
+  border-color: var(--accent);
+  background: #f9fffa;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15);
+}
+
+/* Valid */
+.username-input.valid {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18);
+}
+
+/* Error */
+.username-input.error {
+  border-color: var(--danger);
+  background: #fff6f6;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.18);
+}
+
+/* Disabled */
+.username-input:disabled {
+  background: #f1f5f2;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* =====================================================
+   🔄 INPUT + BUTTON ROW
+===================================================== */
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.input-row .username-input {
+  flex: 1;
+}
+
+.input-row .link-btn {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   👤 ATHLETE USERNAME INPUT (AUTOCOMPLETE)
+===================================================== */
+#athUsername {
+  width: 73%;
+  padding: 11px 14px;
+
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: #ffffff;
+
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text);
+
+  outline: none;
+
+  transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+}
+
+#athUsername::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* Focus */
+#athUsername:focus {
+  border-color: var(--accent);
+  background: #f9fffa;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.18);
+}
+
+/* Valid */
+#athUsername.valid {
+  border-color: var(--success);
+  box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.25);
+}
+
+/* Error */
+#athUsername.error {
+  border-color: var(--danger);
+  background: #fff6f6;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.22);
+}
+/* =====================================================
+   ❌ UNLINK BUTTON – DANGER
+===================================================== */
+.unlink-btn {
+  appearance: none;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #f87171, #dc2626);
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  border-radius: 8px;
+  padding: 15px 15px;
+
+  position: relative;
+  overflow: hidden;
+
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.28);
+
+  transition:
+          transform 0.18s ease,
+          box-shadow 0.18s ease,
+          filter 0.18s ease,
+          opacity 0.18s ease;
+}
+
+/* Shine layer */
+.unlink-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+          120deg,
+          transparent 20%,
+          rgba(255, 255, 255, 0.35),
+          transparent 80%
+  );
+
+  transform: translateX(-120%);
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+/* Hover */
+.unlink-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.4);
+  filter: brightness(1.05);
+}
+
+.unlink-btn:hover::after {
+  transform: translateX(120%);
+}
+
+/* Active */
+.unlink-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.28);
+}
+
+/* Keyboard focus */
+.unlink-btn:focus-visible {
+  outline: none;
+  box-shadow:
+          0 0 0 3px rgba(248, 113, 113, 0.4),
+          0 4px 10px rgba(220, 38, 38, 0.28);
+}
+
+/* Disabled */
+.unlink-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  filter: grayscale(0.4);
+}
+
+.unlink-btn:disabled::after {
+  display: none;
+}
+
+
+/* =====================================================
+   💬 MODAL
+===================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 10px;
+  width: 280px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+.modal-content input {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+.modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.modal-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+.modal-actions .cancel {
+  background: #ccc;
+}
+.modal-actions button:not(.cancel) {
+  background: var(--accent-grad);
+  color: #fff;
+}
+
+/* =====================================================
+   🔔 TOAST (Unified version)
+===================================================== */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent-dark);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  opacity: 0;
+  z-index: 9999;
+  transition: opacity 0.3s, transform 0.4s;
+}
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, -4px);
+}
+
+/* =====================================================
+   ⚠️ ALERT MODAL
+===================================================== */
+.alert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.alert-overlay.show { display: flex; }
+
+.alert-modal {
+  background: #fff;
+  padding: 25px 35px;
+  width: 340px;
+  max-width: 90%;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+  transform: scale(0.8);
+  opacity: 0;
+  transition: all 0.25s ease-out;
+}
+.alert-overlay.show .alert-modal {
+  transform: scale(1);
+  opacity: 1;
+}
+.alert-modal button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #4a4aff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+/* =====================================================
+   🏃 DIVISION BUTTONS
+===================================================== */
+.division-btns button {
+  margin: 2px;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+.division-btns button:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+.runner {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+}
+.jumper {
+  background: linear-gradient(135deg, #2e7d32, #256628);
+}
+.throw {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+.gym {
+  background: linear-gradient(135deg, #f39c12, #d9820f);
+}
+.marathon {
+  background: linear-gradient(135deg, #3ba2f6, #1e88e5);
+}
+.plan-btn {
+  background: linear-gradient(135deg, #0aff0a, #1010d2);
+  padding: 5px 12px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+.plan-btn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+/* =====================================================
+   📱 RESPONSIVE
+===================================================== */
+@media (max-width: 600px) {
+  body { padding: 0.5rem; }
+  .topbar h1 { font-size: 1.1rem; }
+  .big-btn { padding: 16px; font-size: 1rem; }
+  .tabs { flex-direction: column; }
+  section { padding: 14px; }
+}
+/* =====================================================
+   📱 MOBILE FIX — ATH USERNAME FULL WIDTH
+===================================================== */
+@media (max-width: 600px) {
+  #athUsername {
+    width: 50% !important;
+  }
+}
+/* Body is the ONLY scroll container */
+body {
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Hide scrollbar visually (optional) */
+  scrollbar-width: none; /* Firefox */
+}
+
+body {
+  min-height: 100%;
+  height: auto;            /* ⬅️ critical */
+  overflow-y: auto;        /* single scrollbar */
+  overflow-x: hidden;
+}
+
+
+

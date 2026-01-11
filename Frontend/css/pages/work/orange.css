@@ -1,0 +1,350 @@
+/* =====================================================
+   🏋️ GYM TRACKER — PRO GLASS UI (ORANGE)
+===================================================== */
+
+/* ================= ROOT VARIABLES ================= */
+:root {
+  --bg: #ffffff;
+  --card: #ffffffcc;
+
+  --text: #2d2a26;
+  --muted: #6c6057;
+
+  --primary: #f08a24;
+  --primary-2: #e67700;
+  --accent: #ff922b;
+  --accent-light: #fff4e6;
+
+  --danger: #e03131;
+  --border: #f1e3d3;
+  --ring: rgba(240, 138, 36, 0.28);
+  --shadow: rgba(20, 12, 5, 0.12);
+}
+
+/* ================= BASE ================= */
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px 20px 90px;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  color: #fff;
+
+  padding: 18px 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px var(--shadow);
+  margin-bottom: 22px;
+}
+
+.header .row {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.badge {
+  background: rgba(255,255,255,0.9);
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* =====================================================
+   TABS (GLASS)
+===================================================== */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 26px 0;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border-radius: 999px;
+
+
+  background: rgba(240, 138, 36, 0.12);
+  border: 1px solid rgba(240, 138, 36, 0.35);
+  color: #fbfbfa;
+
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tab-btn:hover {
+  background: rgba(240, 138, 36, 0.25);
+  transform: translateY(-1px);
+}
+
+.tab-btn.active {
+  background: #fff;
+  color: var(--primary);
+  border: none;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+.tab-btn.active::after {
+  content: "";
+  position: absolute;
+  left: 20%;
+  bottom: 4px;
+  width: 60%;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 4px;
+}
+
+/* =====================================================
+   TAB CONTENT
+===================================================== */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+.grid {
+  display: grid;
+  gap: 18px;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+/* =====================================================
+   CARD (GLASS)
+===================================================== */
+.card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 6px 18px var(--shadow);
+  animation: fadeIn 0.35s ease;
+}
+
+.card h3 {
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 1.35rem;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+}
+
+/* =====================================================
+   FORMS
+===================================================== */
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: #fff;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+/* =====================================================
+   ROW / TOOLBAR
+===================================================== */
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+button {
+  background: linear-gradient(135deg, var(--accent), var(--primary));
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  transform: translateY(-1px);
+}
+
+button.ghost {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+button.ghost:hover {
+  background: var(--accent-light);
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+.table-wrap {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 760px;
+}
+
+th,
+td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+th {
+  background: var(--accent-light);
+  color: #8a4b00;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+tr:hover td {
+  background: #fffaf3;
+}
+
+/* =====================================================
+   TAGS
+===================================================== */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.tag.weight { background: #ffe8cc; color: #8a4b00; }
+.tag.plyo   { background: #e6fcf5; color: #087f5b; }
+.tag.reflex { background: #e7f5ff; color: #0b7285; }
+
+/* =====================================================
+   EMPTY / SMALL
+===================================================== */
+.empty {
+  text-align: center;
+  color: var(--muted);
+  font-style: italic;
+  padding: 16px;
+}
+
+.small {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* =====================================================
+   ANIMATION
+===================================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width: 700px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tabs {
+    flex-wrap: wrap;
+  }
+
+  button {
+    width: 100%;
+  }
+}
