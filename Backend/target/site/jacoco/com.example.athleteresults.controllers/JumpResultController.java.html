@@ -22,17 +22,17 @@ public class JumpResultController {
     private final JumpResultRepository repo;
     private final AthleteRepository athleteRepo;
 
-<span class="fc" id="L25">    public JumpResultController(JumpResultRepository repo, AthleteRepository athleteRepo) {</span>
-<span class="fc" id="L26">        this.repo = repo;</span>
-<span class="fc" id="L27">        this.athleteRepo = athleteRepo;</span>
-<span class="fc" id="L28">    }</span>
+<span class="nc" id="L25">    public JumpResultController(JumpResultRepository repo, AthleteRepository athleteRepo) {</span>
+<span class="nc" id="L26">        this.repo = repo;</span>
+<span class="nc" id="L27">        this.athleteRepo = athleteRepo;</span>
+<span class="nc" id="L28">    }</span>
 
     /* =====================================================
        GET ALL
     ===================================================== */
     @GetMapping
     public List&lt;JumpResult&gt; all() {
-<span class="fc" id="L35">        return repo.findAll();</span>
+<span class="nc" id="L35">        return repo.findAll();</span>
     }
 
     /* =====================================================
@@ -40,7 +40,7 @@ public class JumpResultController {
     ===================================================== */
     @GetMapping(&quot;/athlete/{athleteId}&quot;)
     public List&lt;JumpResult&gt; byAthlete(@PathVariable Integer athleteId) {
-<span class="fc" id="L43">        return repo.findByAthleteId(athleteId);</span>
+<span class="nc" id="L43">        return repo.findByAthleteId(athleteId);</span>
     }
 
     /* =====================================================
@@ -48,8 +48,8 @@ public class JumpResultController {
     ===================================================== */
     @GetMapping(&quot;/{id}&quot;)
     public JumpResult byId(@PathVariable Integer id) {
-<span class="fc" id="L51">        return repo.findById(id)</span>
-<span class="fc" id="L52">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
+<span class="nc" id="L51">        return repo.findById(id)</span>
+<span class="nc" id="L52">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
                         HttpStatus.NOT_FOUND,
                         &quot;Jump result not found with ID: &quot; + id
                 ));
@@ -60,13 +60,13 @@ public class JumpResultController {
     ===================================================== */
     @PostMapping
     public JumpResult create(@RequestBody JumpResult newJump) {
-<span class="fc bfc" id="L63" title="All 2 branches covered.">        if (!athleteRepo.existsById(newJump.getAthleteId())) {</span>
-<span class="fc" id="L64">            throw new ResponseStatusException(</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (!athleteRepo.existsById(newJump.getAthleteId())) {</span>
+<span class="nc" id="L64">            throw new ResponseStatusException(</span>
                     HttpStatus.BAD_REQUEST,
-<span class="fc" id="L66">                    &quot;Athlete not found with ID: &quot; + newJump.getAthleteId()</span>
+<span class="nc" id="L66">                    &quot;Athlete not found with ID: &quot; + newJump.getAthleteId()</span>
             );
         }
-<span class="fc" id="L69">        return repo.save(newJump);</span>
+<span class="nc" id="L69">        return repo.save(newJump);</span>
     }
 
     /* =====================================================
@@ -74,15 +74,15 @@ public class JumpResultController {
     ===================================================== */
     @PutMapping(&quot;/{id}&quot;)
     public JumpResult update(@PathVariable Integer id, @RequestBody JumpResult data) {
-<span class="fc" id="L77">        return repo.findById(id).map(jump -&gt; {</span>
-<span class="fc" id="L78">            jump.setJumpDate(data.getJumpDate());</span>
-<span class="fc" id="L79">            jump.setJumpType(data.getJumpType());</span>
-<span class="fc" id="L80">            jump.setDetail(data.getDetail());</span>
-<span class="fc" id="L81">            jump.setDistanceM(data.getDistanceM());</span>
-<span class="fc" id="L82">            jump.setAthleteId(data.getAthleteId());</span>
-<span class="fc" id="L83">            jump.setNotes(data.getNotes());</span>
-<span class="fc" id="L84">            return repo.save(jump);</span>
-<span class="fc" id="L85">        }).orElseThrow(() -&gt; new ResponseStatusException(</span>
+<span class="nc" id="L77">        return repo.findById(id).map(jump -&gt; {</span>
+<span class="nc" id="L78">            jump.setJumpDate(data.getJumpDate());</span>
+<span class="nc" id="L79">            jump.setJumpType(data.getJumpType());</span>
+<span class="nc" id="L80">            jump.setDetail(data.getDetail());</span>
+<span class="nc" id="L81">            jump.setDistanceM(data.getDistanceM());</span>
+<span class="nc" id="L82">            jump.setAthleteId(data.getAthleteId());</span>
+<span class="nc" id="L83">            jump.setNotes(data.getNotes());</span>
+<span class="nc" id="L84">            return repo.save(jump);</span>
+<span class="nc" id="L85">        }).orElseThrow(() -&gt; new ResponseStatusException(</span>
                 HttpStatus.NOT_FOUND,
                 &quot;Jump result not found with ID: &quot; + id
         ));
@@ -93,14 +93,14 @@ public class JumpResultController {
     ===================================================== */
     @DeleteMapping(&quot;/{id}&quot;)
     public String delete(@PathVariable Integer id) {
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">        if (!repo.existsById(id)) {</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (!repo.existsById(id)) {</span>
 <span class="nc" id="L97">            throw new ResponseStatusException(</span>
                     HttpStatus.NOT_FOUND,
                     &quot;Jump result not found with ID: &quot; + id
             );
         }
-<span class="fc" id="L102">        repo.deleteById(id);</span>
-<span class="fc" id="L103">        return &quot;iku&quot;;</span>
+<span class="nc" id="L102">        repo.deleteById(id);</span>
+<span class="nc" id="L103">        return &quot;iku&quot;;</span>
     }
 
     /* =====================================================
@@ -116,8 +116,8 @@ public class JumpResultController {
             @RequestParam(required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to
     ) {
-<span class="fc" id="L119">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to),</span>
-<span class="fc" id="L120">                Sort.by(&quot;jumpDate&quot;).ascending());</span>
+<span class="nc" id="L119">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to),</span>
+<span class="nc" id="L120">                Sort.by(&quot;jumpDate&quot;).ascending());</span>
     }
 
     /* =====================================================
@@ -135,13 +135,13 @@ public class JumpResultController {
             @RequestParam(defaultValue = &quot;date&quot;) String sortBy,
             @RequestParam(defaultValue = &quot;asc&quot;) String sortOrder
     ) {
-<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        Sort sort = sortBy.equalsIgnoreCase(&quot;distancem&quot;)</span>
-<span class="fc" id="L139">                ? Sort.by(&quot;distanceM&quot;)</span>
-<span class="pc" id="L140">                : Sort.by(&quot;jumpDate&quot;);</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        Sort sort = sortBy.equalsIgnoreCase(&quot;distancem&quot;)</span>
+<span class="nc" id="L139">                ? Sort.by(&quot;distanceM&quot;)</span>
+<span class="nc" id="L140">                : Sort.by(&quot;jumpDate&quot;);</span>
 
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        sort = sortOrder.equalsIgnoreCase(&quot;desc&quot;) ? sort.descending() : sort.ascending();</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        sort = sortOrder.equalsIgnoreCase(&quot;desc&quot;) ? sort.descending() : sort.ascending();</span>
 
-<span class="fc" id="L144">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to), sort);</span>
+<span class="nc" id="L144">        return repo.findAll(buildSpec(athleteId, jumpType, detail, from, to), sort);</span>
     }
 
     /* =====================================================
@@ -151,7 +151,7 @@ public class JumpResultController {
             Integer athleteId, String jumpType, String detail,
             LocalDate from, LocalDate to
     ) {
-<span class="fc" id="L154">        return (root, query, cb) -&gt; {</span>
+<span class="nc" id="L154">        return (root, query, cb) -&gt; {</span>
 <span class="nc" id="L155">            Predicate p = cb.conjunction();</span>
 
 <span class="nc bnc" id="L157" title="All 2 branches missed.">            if (athleteId != null)</span>

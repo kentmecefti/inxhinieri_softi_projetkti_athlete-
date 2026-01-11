@@ -39,22 +39,22 @@ public class AthleteController {
                              SessionRepository sessionRepo,
                              CoachAthleteRelationRepository relationRepo,
                              UserRepository userRepo,
-<span class="fc" id="L42">                             CoachRepository coachRepo) {</span>
-<span class="fc" id="L43">        this.repo = repo;</span>
-<span class="fc" id="L44">        this.resultRepo = resultRepo;</span>
-<span class="fc" id="L45">        this.jumpResultRepo = jumpResultRepo;</span>
-<span class="fc" id="L46">        this.throwResultRepo = throwResultRepo;</span>
-<span class="fc" id="L47">        this.gymSessionRepo = gymSessionRepo;</span>
-<span class="fc" id="L48">        this.sessionRepo = sessionRepo;</span>
-<span class="fc" id="L49">        this.relationRepo = relationRepo;</span>
-<span class="fc" id="L50">        this.userRepo = userRepo;</span>
-<span class="fc" id="L51">        this.coachRepo = coachRepo;</span>
-<span class="fc" id="L52">    }</span>
+<span class="nc" id="L42">                             CoachRepository coachRepo) {</span>
+<span class="nc" id="L43">        this.repo = repo;</span>
+<span class="nc" id="L44">        this.resultRepo = resultRepo;</span>
+<span class="nc" id="L45">        this.jumpResultRepo = jumpResultRepo;</span>
+<span class="nc" id="L46">        this.throwResultRepo = throwResultRepo;</span>
+<span class="nc" id="L47">        this.gymSessionRepo = gymSessionRepo;</span>
+<span class="nc" id="L48">        this.sessionRepo = sessionRepo;</span>
+<span class="nc" id="L49">        this.relationRepo = relationRepo;</span>
+<span class="nc" id="L50">        this.userRepo = userRepo;</span>
+<span class="nc" id="L51">        this.coachRepo = coachRepo;</span>
+<span class="nc" id="L52">    }</span>
 
     // ===== GET all athletes =====
     @GetMapping
     public List&lt;Athlete&gt; all() {
-<span class="fc" id="L57">        return repo.findAll();</span>
+<span class="nc" id="L57">        return repo.findAll();</span>
     }
 
     @GetMapping(&quot;/{id}&quot;)
@@ -62,47 +62,47 @@ public class AthleteController {
             @PathVariable Integer id,
             @AuthenticationPrincipal UserDetails userDetails
     ) {
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (userDetails == null) {</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        if (userDetails == null) {</span>
 <span class="nc" id="L66">            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, &quot;Not logged in&quot;);</span>
         }
 
-<span class="fc" id="L69">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
-<span class="pc" id="L70">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED));</span>
+<span class="nc" id="L69">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="nc" id="L70">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.UNAUTHORIZED));</span>
 
-<span class="fc" id="L72">        Athlete athlete = repo.findById(id)</span>
-<span class="pc" id="L73">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));</span>
+<span class="nc" id="L72">        Athlete athlete = repo.findById(id)</span>
+<span class="nc" id="L73">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND));</span>
 
         // ADMIN → always allowed
-<span class="fc" id="L76">        if (userDetails.getAuthorities().stream()</span>
-<span class="fc bfc" id="L77" title="All 2 branches covered.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ADMIN&quot;))) {</span>
-<span class="fc" id="L78">            return ResponseEntity.ok(athlete);</span>
+<span class="nc" id="L76">        if (userDetails.getAuthorities().stream()</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ADMIN&quot;))) {</span>
+<span class="nc" id="L78">            return ResponseEntity.ok(athlete);</span>
         }
 
         // ATHLETE → only self
-<span class="fc" id="L82">        if (userDetails.getAuthorities().stream()</span>
-<span class="fc bfc" id="L83" title="All 2 branches covered.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ATHLETE&quot;))) {</span>
+<span class="nc" id="L82">        if (userDetails.getAuthorities().stream()</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_ATHLETE&quot;))) {</span>
 
-<span class="fc" id="L85">            Athlete logged = repo.findByUserId(user.getId())</span>
-<span class="pc" id="L86">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN));</span>
+<span class="nc" id="L85">            Athlete logged = repo.findByUserId(user.getId())</span>
+<span class="nc" id="L86">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN));</span>
 
-<span class="pc bpc" id="L88" title="1 of 2 branches missed.">            if (!logged.getId().equals(id)) {</span>
-<span class="fc" id="L89">                throw new ResponseStatusException(HttpStatus.FORBIDDEN);</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (!logged.getId().equals(id)) {</span>
+<span class="nc" id="L89">                throw new ResponseStatusException(HttpStatus.FORBIDDEN);</span>
             }
 <span class="nc" id="L91">            return ResponseEntity.ok(athlete);</span>
         }
 
         // COACH → must be linked
-<span class="fc" id="L95">        if (userDetails.getAuthorities().stream()</span>
-<span class="pc bpc" id="L96" title="1 of 2 branches missed.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_COACH&quot;))) {</span>
+<span class="nc" id="L95">        if (userDetails.getAuthorities().stream()</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                .anyMatch(a -&gt; a.getAuthority().equals(&quot;ROLE_COACH&quot;))) {</span>
 
-<span class="fc" id="L98">            Coach coach = coachRepo.findByUserId(user.getId())</span>
-<span class="pc" id="L99">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN));</span>
+<span class="nc" id="L98">            Coach coach = coachRepo.findByUserId(user.getId())</span>
+<span class="nc" id="L99">                    .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.FORBIDDEN));</span>
 
-<span class="fc" id="L101">            boolean linked = relationRepo</span>
-<span class="fc" id="L102">                    .existsByCoachIdAndAthleteIdAndStatusId(coach.getId(), athlete.getId(), 1);</span>
+<span class="nc" id="L101">            boolean linked = relationRepo</span>
+<span class="nc" id="L102">                    .existsByCoachIdAndAthleteIdAndStatusId(coach.getId(), athlete.getId(), 1);</span>
 
-<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (!linked) {</span>
-<span class="fc" id="L105">                throw new ResponseStatusException(HttpStatus.FORBIDDEN);</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (!linked) {</span>
+<span class="nc" id="L105">                throw new ResponseStatusException(HttpStatus.FORBIDDEN);</span>
             }
 
 <span class="nc" id="L108">            return ResponseEntity.ok(athlete);</span>
@@ -116,62 +116,62 @@ public class AthleteController {
     // ===== CREATE new athlete =====
     @PostMapping
     public Athlete create(@RequestBody Map&lt;String, Object&gt; body) {
-<span class="fc" id="L119">        Athlete athlete = new Athlete();</span>
+<span class="nc" id="L119">        Athlete athlete = new Athlete();</span>
 
-<span class="fc" id="L121">        athlete.setName((String) body.get(&quot;name&quot;));</span>
-<span class="fc" id="L122">        athlete.setLastname((String) body.get(&quot;lastname&quot;));</span>
-<span class="fc" id="L123">        athlete.setGender((String) body.get(&quot;gender&quot;));</span>
-<span class="pc bpc" id="L124" title="1 of 2 branches missed.">        athlete.setBirthDate(body.get(&quot;birthDate&quot;) != null ? Date.valueOf((String) body.get(&quot;birthDate&quot;)) : null);</span>
-<span class="pc bpc" id="L125" title="1 of 2 branches missed.">        athlete.setAge((body.get(&quot;age&quot;) instanceof Number) ? ((Number) body.get(&quot;age&quot;)).intValue() : null);</span>
-<span class="pc bpc" id="L126" title="1 of 2 branches missed.">        athlete.setAthWeight((body.get(&quot;athWeight&quot;) instanceof Number) ? ((Number) body.get(&quot;athWeight&quot;)).doubleValue() : null);</span>
-<span class="pc bpc" id="L127" title="1 of 2 branches missed.">        athlete.setAthHeight((body.get(&quot;athHeight&quot;) instanceof Number) ? ((Number) body.get(&quot;athHeight&quot;)).doubleValue() : null);</span>
-<span class="fc" id="L128">        athlete.setCategory((String) body.get(&quot;category&quot;));</span>
-<span class="fc" id="L129">        athlete.setPerformance((String) body.getOrDefault(&quot;performance&quot;, &quot;average&quot;));</span>
-<span class="fc" id="L130">        athlete.setClub((String) body.get(&quot;club&quot;));</span>
-<span class="fc" id="L131">        athlete.setCountry((String) body.get(&quot;country&quot;));</span>
-<span class="fc" id="L132">        athlete.setCity((String) body.get(&quot;city&quot;));</span>
-<span class="fc" id="L133">        athlete.setUpdatedAt(LocalDateTime.now());</span>
+<span class="nc" id="L121">        athlete.setName((String) body.get(&quot;name&quot;));</span>
+<span class="nc" id="L122">        athlete.setLastname((String) body.get(&quot;lastname&quot;));</span>
+<span class="nc" id="L123">        athlete.setGender((String) body.get(&quot;gender&quot;));</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        athlete.setBirthDate(body.get(&quot;birthDate&quot;) != null ? Date.valueOf((String) body.get(&quot;birthDate&quot;)) : null);</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        athlete.setAge((body.get(&quot;age&quot;) instanceof Number) ? ((Number) body.get(&quot;age&quot;)).intValue() : null);</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">        athlete.setAthWeight((body.get(&quot;athWeight&quot;) instanceof Number) ? ((Number) body.get(&quot;athWeight&quot;)).doubleValue() : null);</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        athlete.setAthHeight((body.get(&quot;athHeight&quot;) instanceof Number) ? ((Number) body.get(&quot;athHeight&quot;)).doubleValue() : null);</span>
+<span class="nc" id="L128">        athlete.setCategory((String) body.get(&quot;category&quot;));</span>
+<span class="nc" id="L129">        athlete.setPerformance((String) body.getOrDefault(&quot;performance&quot;, &quot;average&quot;));</span>
+<span class="nc" id="L130">        athlete.setClub((String) body.get(&quot;club&quot;));</span>
+<span class="nc" id="L131">        athlete.setCountry((String) body.get(&quot;country&quot;));</span>
+<span class="nc" id="L132">        athlete.setCity((String) body.get(&quot;city&quot;));</span>
+<span class="nc" id="L133">        athlete.setUpdatedAt(LocalDateTime.now());</span>
 
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        if (body.get(&quot;user_id&quot;) instanceof Number)</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">        if (body.get(&quot;user_id&quot;) instanceof Number)</span>
 <span class="nc" id="L136">            athlete.setUserId(((Number) body.get(&quot;user_id&quot;)).intValue());</span>
 
-<span class="fc" id="L138">        return repo.save(athlete);</span>
+<span class="nc" id="L138">        return repo.save(athlete);</span>
     }
 
     // ===== UPDATE athlete =====
     @PutMapping(&quot;/{id}&quot;)
     public Athlete update(@PathVariable Integer id, @RequestBody Map&lt;String, Object&gt; body) {
-<span class="fc" id="L144">        Athlete athlete = repo.findById(id)</span>
-<span class="pc" id="L145">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+<span class="nc" id="L144">        Athlete athlete = repo.findById(id)</span>
+<span class="nc" id="L145">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
 
-<span class="pc bpc" id="L147" title="1 of 2 branches missed.">        if (body.containsKey(&quot;name&quot;)) athlete.setName((String) body.get(&quot;name&quot;));</span>
-<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (body.containsKey(&quot;lastname&quot;)) athlete.setLastname((String) body.get(&quot;lastname&quot;));</span>
-<span class="pc bpc" id="L149" title="1 of 2 branches missed.">        if (body.containsKey(&quot;gender&quot;)) athlete.setGender((String) body.get(&quot;gender&quot;));</span>
-<span class="pc bpc" id="L150" title="3 of 4 branches missed.">        if (body.containsKey(&quot;birthDate&quot;) &amp;&amp; body.get(&quot;birthDate&quot;) != null)</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        if (body.containsKey(&quot;name&quot;)) athlete.setName((String) body.get(&quot;name&quot;));</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        if (body.containsKey(&quot;lastname&quot;)) athlete.setLastname((String) body.get(&quot;lastname&quot;));</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (body.containsKey(&quot;gender&quot;)) athlete.setGender((String) body.get(&quot;gender&quot;));</span>
+<span class="nc bnc" id="L150" title="All 4 branches missed.">        if (body.containsKey(&quot;birthDate&quot;) &amp;&amp; body.get(&quot;birthDate&quot;) != null)</span>
 <span class="nc" id="L151">            athlete.setBirthDate(Date.valueOf((String) body.get(&quot;birthDate&quot;)));</span>
-<span class="pc bpc" id="L152" title="3 of 4 branches missed.">        if (body.containsKey(&quot;age&quot;) &amp;&amp; body.get(&quot;age&quot;) instanceof Number)</span>
+<span class="nc bnc" id="L152" title="All 4 branches missed.">        if (body.containsKey(&quot;age&quot;) &amp;&amp; body.get(&quot;age&quot;) instanceof Number)</span>
 <span class="nc" id="L153">            athlete.setAge(((Number) body.get(&quot;age&quot;)).intValue());</span>
-<span class="pc bpc" id="L154" title="3 of 4 branches missed.">        if (body.containsKey(&quot;athWeight&quot;) &amp;&amp; body.get(&quot;athWeight&quot;) instanceof Number)</span>
+<span class="nc bnc" id="L154" title="All 4 branches missed.">        if (body.containsKey(&quot;athWeight&quot;) &amp;&amp; body.get(&quot;athWeight&quot;) instanceof Number)</span>
 <span class="nc" id="L155">            athlete.setAthWeight(((Number) body.get(&quot;athWeight&quot;)).doubleValue());</span>
-<span class="pc bpc" id="L156" title="3 of 4 branches missed.">        if (body.containsKey(&quot;athHeight&quot;) &amp;&amp; body.get(&quot;athHeight&quot;) instanceof Number)</span>
+<span class="nc bnc" id="L156" title="All 4 branches missed.">        if (body.containsKey(&quot;athHeight&quot;) &amp;&amp; body.get(&quot;athHeight&quot;) instanceof Number)</span>
 <span class="nc" id="L157">            athlete.setAthHeight(((Number) body.get(&quot;athHeight&quot;)).doubleValue());</span>
-<span class="pc bpc" id="L158" title="1 of 2 branches missed.">        if (body.containsKey(&quot;category&quot;)) athlete.setCategory((String) body.get(&quot;category&quot;));</span>
-<span class="pc bpc" id="L159" title="1 of 2 branches missed.">        if (body.containsKey(&quot;performance&quot;)) athlete.setPerformance((String) body.get(&quot;performance&quot;));</span>
-<span class="pc bpc" id="L160" title="1 of 2 branches missed.">        if (body.containsKey(&quot;club&quot;)) athlete.setClub((String) body.get(&quot;club&quot;));</span>
-<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (body.containsKey(&quot;country&quot;)) athlete.setCountry((String) body.get(&quot;country&quot;));</span>
-<span class="pc bpc" id="L162" title="1 of 2 branches missed.">        if (body.containsKey(&quot;city&quot;)) athlete.setCity((String) body.get(&quot;city&quot;));</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">        if (body.containsKey(&quot;category&quot;)) athlete.setCategory((String) body.get(&quot;category&quot;));</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (body.containsKey(&quot;performance&quot;)) athlete.setPerformance((String) body.get(&quot;performance&quot;));</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (body.containsKey(&quot;club&quot;)) athlete.setClub((String) body.get(&quot;club&quot;));</span>
+<span class="nc bnc" id="L161" title="All 2 branches missed.">        if (body.containsKey(&quot;country&quot;)) athlete.setCountry((String) body.get(&quot;country&quot;));</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (body.containsKey(&quot;city&quot;)) athlete.setCity((String) body.get(&quot;city&quot;));</span>
 
-<span class="fc" id="L164">        athlete.setUpdatedAt(LocalDateTime.now());</span>
-<span class="fc" id="L165">        return repo.save(athlete);</span>
+<span class="nc" id="L164">        athlete.setUpdatedAt(LocalDateTime.now());</span>
+<span class="nc" id="L165">        return repo.save(athlete);</span>
     }
 
     // ===== DELETE athlete =====
     @DeleteMapping(&quot;/{id}&quot;)
     public String delete(@PathVariable Integer id) {
-<span class="pc bpc" id="L171" title="1 of 2 branches missed.">        if (!repo.existsById(id))</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if (!repo.existsById(id))</span>
 <span class="nc" id="L172">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;);</span>
-<span class="fc" id="L173">        repo.deleteById(id);</span>
-<span class="fc" id="L174">        return &quot;Athlete deleted successfully&quot;;</span>
+<span class="nc" id="L173">        repo.deleteById(id);</span>
+<span class="nc" id="L174">        return &quot;Athlete deleted successfully&quot;;</span>
     }
 
     // ===== GET all coaches linked to this athlete =====

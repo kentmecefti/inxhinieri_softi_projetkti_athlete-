@@ -18,44 +18,44 @@ public class GymSessionController {
     private final GymSessionRepository gymSessionRepository;
     private final AthleteRepository athleteRepository;
 
-<span class="fc" id="L21">    public GymSessionController(GymSessionRepository gymSessionRepository, AthleteRepository athleteRepository) {</span>
-<span class="fc" id="L22">        this.gymSessionRepository = gymSessionRepository;</span>
-<span class="fc" id="L23">        this.athleteRepository = athleteRepository;</span>
-<span class="fc" id="L24">    }</span>
+<span class="nc" id="L21">    public GymSessionController(GymSessionRepository gymSessionRepository, AthleteRepository athleteRepository) {</span>
+<span class="nc" id="L22">        this.gymSessionRepository = gymSessionRepository;</span>
+<span class="nc" id="L23">        this.athleteRepository = athleteRepository;</span>
+<span class="nc" id="L24">    }</span>
 
     @GetMapping
     public List&lt;GymSession&gt; getAll() {
-<span class="fc" id="L28">        return gymSessionRepository.findAll();</span>
+<span class="nc" id="L28">        return gymSessionRepository.findAll();</span>
     }
 
     @GetMapping(&quot;/athlete/{athleteId}&quot;)
     public List&lt;GymSession&gt; getByAthlete(@PathVariable Integer athleteId) {
-<span class="fc" id="L33">        return gymSessionRepository.findByAthleteId(athleteId);</span>
+<span class="nc" id="L33">        return gymSessionRepository.findByAthleteId(athleteId);</span>
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GymSession create(@RequestBody GymSession session) {
-<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if (session.getAthlete() == null || session.getAthlete().getId() == null) {</span>
-<span class="fc" id="L40">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Athlete ID is required&quot;);</span>
+<span class="nc bnc" id="L39" title="All 4 branches missed.">        if (session.getAthlete() == null || session.getAthlete().getId() == null) {</span>
+<span class="nc" id="L40">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Athlete ID is required&quot;);</span>
         }
 
-<span class="fc" id="L43">        Athlete athlete = athleteRepository.findById(session.getAthlete().getId())</span>
-<span class="fc" id="L44">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
+<span class="nc" id="L43">        Athlete athlete = athleteRepository.findById(session.getAthlete().getId())</span>
+<span class="nc" id="L44">                .orElseThrow(() -&gt; new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Athlete not found&quot;));</span>
 
-<span class="fc" id="L46">        session.setAthlete(athlete);</span>
+<span class="nc" id="L46">        session.setAthlete(athlete);</span>
 
-<span class="fc" id="L48">        return gymSessionRepository.save(session);</span>
+<span class="nc" id="L48">        return gymSessionRepository.save(session);</span>
     }
 
     @DeleteMapping(&quot;/{id}&quot;)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
-<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (!gymSessionRepository.existsById(id)) {</span>
-<span class="fc" id="L55">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Gym session not found&quot;);</span>
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (!gymSessionRepository.existsById(id)) {</span>
+<span class="nc" id="L55">            throw new ResponseStatusException(HttpStatus.NOT_FOUND, &quot;Gym session not found&quot;);</span>
         }
-<span class="fc" id="L57">        gymSessionRepository.deleteById(id);</span>
-<span class="fc" id="L58">    }</span>
+<span class="nc" id="L57">        gymSessionRepository.deleteById(id);</span>
+<span class="nc" id="L58">    }</span>
 
     @GetMapping(&quot;/filter&quot;)
     public List&lt;GymSession&gt; filter(
@@ -65,21 +65,21 @@ public class GymSessionController {
             @RequestParam(required = false) String from,
             @RequestParam(required = false) String to
     ) {
-<span class="fc" id="L68">        List&lt;GymSession&gt; sessions = gymSessionRepository.findAll();</span>
-<span class="fc" id="L69">        return sessions.stream()</span>
-<span class="pc bpc" id="L70" title="1 of 2 branches missed.">                .filter(s -&gt; athleteId == null ||</span>
-<span class="pc bpc" id="L71" title="2 of 4 branches missed.">                        (s.getAthlete() != null &amp;&amp; s.getAthlete().getId().equals(athleteId)))</span>
-<span class="pc bpc" id="L72" title="3 of 6 branches missed.">                .filter(s -&gt; category == null || category.isEmpty() || s.getCategory().equalsIgnoreCase(category))</span>
-<span class="pc bpc" id="L73" title="3 of 6 branches missed.">                .filter(s -&gt; search == null || search.isEmpty() || s.getExerciseName().toLowerCase().contains(search.toLowerCase()))</span>
-<span class="fc" id="L74">                .filter(s -&gt; {</span>
-<span class="pc bpc" id="L75" title="2 of 4 branches missed.">                    if (from == null || from.isEmpty()) return true;</span>
-<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                    return !s.getSessionDate().isBefore(java.time.LocalDate.parse(from));</span>
+<span class="nc" id="L68">        List&lt;GymSession&gt; sessions = gymSessionRepository.findAll();</span>
+<span class="nc" id="L69">        return sessions.stream()</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                .filter(s -&gt; athleteId == null ||</span>
+<span class="nc bnc" id="L71" title="All 4 branches missed.">                        (s.getAthlete() != null &amp;&amp; s.getAthlete().getId().equals(athleteId)))</span>
+<span class="nc bnc" id="L72" title="All 6 branches missed.">                .filter(s -&gt; category == null || category.isEmpty() || s.getCategory().equalsIgnoreCase(category))</span>
+<span class="nc bnc" id="L73" title="All 6 branches missed.">                .filter(s -&gt; search == null || search.isEmpty() || s.getExerciseName().toLowerCase().contains(search.toLowerCase()))</span>
+<span class="nc" id="L74">                .filter(s -&gt; {</span>
+<span class="nc bnc" id="L75" title="All 4 branches missed.">                    if (from == null || from.isEmpty()) return true;</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                    return !s.getSessionDate().isBefore(java.time.LocalDate.parse(from));</span>
                 })
-<span class="fc" id="L78">                .filter(s -&gt; {</span>
-<span class="pc bpc" id="L79" title="2 of 4 branches missed.">                    if (to == null || to.isEmpty()) return true;</span>
-<span class="pc bpc" id="L80" title="1 of 2 branches missed.">                    return !s.getSessionDate().isAfter(java.time.LocalDate.parse(to));</span>
+<span class="nc" id="L78">                .filter(s -&gt; {</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">                    if (to == null || to.isEmpty()) return true;</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                    return !s.getSessionDate().isAfter(java.time.LocalDate.parse(to));</span>
                 })
-<span class="fc" id="L82">                .toList();</span>
+<span class="nc" id="L82">                .toList();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

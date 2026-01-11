@@ -32,7 +32,7 @@ public class AuthController {
     private final JwtService jwtService;
 
     // Allowed role names
-<span class="fc" id="L35">    private static final Set&lt;String&gt; VALID_ROLES = Set.of(&quot;ADMIN&quot;, &quot;DATA ANALYST&quot;, &quot;COACH&quot;, &quot;ATHLETE&quot;);</span>
+<span class="nc" id="L35">    private static final Set&lt;String&gt; VALID_ROLES = Set.of(&quot;ADMIN&quot;, &quot;DATA ANALYST&quot;, &quot;COACH&quot;, &quot;ATHLETE&quot;);</span>
 
     public AuthController(AuthenticationManager authManager,
                           UserRepository userRepo,
@@ -40,48 +40,48 @@ public class AuthController {
                           AthleteRepository athleteRepo,
                           CoachRepository coachRepo,
                           PasswordEncoder encoder,
-<span class="fc" id="L43">                          JwtService jwtService) {</span>
-<span class="fc" id="L44">        this.authManager = authManager;</span>
-<span class="fc" id="L45">        this.userRepo = userRepo;</span>
-<span class="fc" id="L46">        this.roleRepo = roleRepo;</span>
-<span class="fc" id="L47">        this.athleteRepo = athleteRepo;</span>
-<span class="fc" id="L48">        this.coachRepo = coachRepo;</span>
-<span class="fc" id="L49">        this.encoder = encoder;</span>
-<span class="fc" id="L50">        this.jwtService = jwtService;</span>
-<span class="fc" id="L51">    }</span>
+<span class="nc" id="L43">                          JwtService jwtService) {</span>
+<span class="nc" id="L44">        this.authManager = authManager;</span>
+<span class="nc" id="L45">        this.userRepo = userRepo;</span>
+<span class="nc" id="L46">        this.roleRepo = roleRepo;</span>
+<span class="nc" id="L47">        this.athleteRepo = athleteRepo;</span>
+<span class="nc" id="L48">        this.coachRepo = coachRepo;</span>
+<span class="nc" id="L49">        this.encoder = encoder;</span>
+<span class="nc" id="L50">        this.jwtService = jwtService;</span>
+<span class="nc" id="L51">    }</span>
 
     // ========================= REGISTER =========================
     @PostMapping(&quot;/register&quot;)
     public ResponseEntity&lt;?&gt; register(@RequestBody RegistrationRequest req) {
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (userRepo.existsByUsername(req.getUsername())) {</span>
-<span class="fc" id="L57">            throw new ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already exists&quot;);</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        if (userRepo.existsByUsername(req.getUsername())) {</span>
+<span class="nc" id="L57">            throw new ResponseStatusException(HttpStatus.CONFLICT, &quot;Username already exists&quot;);</span>
         }
 
         // Validate and normalize role
-<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        String roleName = (req.getRole() != null) ? req.getRole().trim().toUpperCase() : &quot;ATHLETE&quot;;</span>
-<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (!VALID_ROLES.contains(roleName)) {</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        String roleName = (req.getRole() != null) ? req.getRole().trim().toUpperCase() : &quot;ATHLETE&quot;;</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (!VALID_ROLES.contains(roleName)) {</span>
 <span class="nc" id="L63">            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, &quot;Invalid role: &quot; + roleName);</span>
         }
 
         // 1️⃣ Create user
-<span class="fc" id="L67">        User user = new User();</span>
-<span class="fc" id="L68">        user.setUsername(req.getUsername());</span>
-<span class="fc" id="L69">        user.setEmail(req.getEmail());</span>
-<span class="fc" id="L70">        user.setPassword(encoder.encode(req.getPassword()));</span>
-<span class="fc" id="L71">        User savedUser = userRepo.save(user);</span>
+<span class="nc" id="L67">        User user = new User();</span>
+<span class="nc" id="L68">        user.setUsername(req.getUsername());</span>
+<span class="nc" id="L69">        user.setEmail(req.getEmail());</span>
+<span class="nc" id="L70">        user.setPassword(encoder.encode(req.getPassword()));</span>
+<span class="nc" id="L71">        User savedUser = userRepo.save(user);</span>
 
         // 2️⃣ Assign role
-<span class="fc" id="L74">        Role role = new Role(roleName, savedUser);</span>
-<span class="fc" id="L75">        roleRepo.save(role);</span>
+<span class="nc" id="L74">        Role role = new Role(roleName, savedUser);</span>
+<span class="nc" id="L75">        roleRepo.save(role);</span>
 
         // 3️⃣ Auto-link based on role
-<span class="pc bpc" id="L78" title="2 of 3 branches missed.">        switch (roleName) {</span>
+<span class="nc bnc" id="L78" title="All 3 branches missed.">        switch (roleName) {</span>
             case &quot;ATHLETE&quot; -&gt; {
-<span class="fc" id="L80">                Athlete athlete = new Athlete();</span>
-<span class="fc" id="L81">                athlete.setName(savedUser.getUsername());</span>
-<span class="fc" id="L82">                athlete.setUser(savedUser);</span>
-<span class="fc" id="L83">                athleteRepo.save(athlete);</span>
-<span class="fc" id="L84">            }</span>
+<span class="nc" id="L80">                Athlete athlete = new Athlete();</span>
+<span class="nc" id="L81">                athlete.setName(savedUser.getUsername());</span>
+<span class="nc" id="L82">                athlete.setUser(savedUser);</span>
+<span class="nc" id="L83">                athleteRepo.save(athlete);</span>
+<span class="nc" id="L84">            }</span>
             case &quot;COACH&quot; -&gt; {
 <span class="nc" id="L86">                Coach coach = new Coach();</span>
 <span class="nc" id="L87">                coach.setName(savedUser.getUsername());</span>
@@ -93,7 +93,7 @@ public class AuthController {
             }
         }
 
-<span class="fc" id="L96">        return ResponseEntity.ok(&quot;✅ User registered successfully as &quot; + roleName);</span>
+<span class="nc" id="L96">        return ResponseEntity.ok(&quot;✅ User registered successfully as &quot; + roleName);</span>
     }
 
     // ========================= LOGIN =========================
@@ -101,27 +101,27 @@ public class AuthController {
     public ResponseEntity&lt;?&gt; login(@RequestBody User user) {
         try {
             // Try to authenticate first
-<span class="fc" id="L104">            Authentication auth = authManager.authenticate(</span>
-<span class="fc" id="L105">                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())</span>
+<span class="nc" id="L104">            Authentication auth = authManager.authenticate(</span>
+<span class="nc" id="L105">                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())</span>
             );
 
             // Retrieve full user entity
-<span class="fc" id="L109">            User foundUser = userRepo.findByUsername(user.getUsername())</span>
-<span class="pc" id="L110">                    .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
+<span class="nc" id="L109">            User foundUser = userRepo.findByUsername(user.getUsername())</span>
+<span class="nc" id="L110">                    .orElseThrow(() -&gt; new RuntimeException(&quot;User not found&quot;));</span>
 
             // Check if user is active
-<span class="fc bfc" id="L113" title="All 2 branches covered.">            if (!foundUser.isActive()) {</span>
-<span class="fc" id="L114">                return ResponseEntity.status(HttpStatus.FORBIDDEN)</span>
-<span class="fc" id="L115">                        .body(&quot; User account is inactive. Please contact an administrator.&quot;);</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">            if (!foundUser.isActive()) {</span>
+<span class="nc" id="L114">                return ResponseEntity.status(HttpStatus.FORBIDDEN)</span>
+<span class="nc" id="L115">                        .body(&quot; User account is inactive. Please contact an administrator.&quot;);</span>
             }
 
             // Generate JWT token
-<span class="fc" id="L119">            String token = jwtService.generateToken(user.getUsername());</span>
-<span class="fc" id="L120">            return ResponseEntity.ok(token);</span>
+<span class="nc" id="L119">            String token = jwtService.generateToken(user.getUsername());</span>
+<span class="nc" id="L120">            return ResponseEntity.ok(token);</span>
 
-<span class="fc" id="L122">        } catch (BadCredentialsException ex) {</span>
-<span class="fc" id="L123">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
-<span class="fc" id="L124">                    .body(&quot; Invalid username or password.&quot;);</span>
+<span class="nc" id="L122">        } catch (BadCredentialsException ex) {</span>
+<span class="nc" id="L123">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
+<span class="nc" id="L124">                    .body(&quot; Invalid username or password.&quot;);</span>
 <span class="nc" id="L125">        } catch (Exception ex) {</span>
 <span class="nc" id="L126">            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)</span>
 <span class="nc" id="L127">                    .body(&quot; Login failed: &quot; + ex.getMessage());</span>
@@ -154,26 +154,26 @@ public class AuthController {
             @AuthenticationPrincipal UserDetails userDetails,
             @Valid @RequestBody ChangePasswordRequest req
     ) {
-<span class="pc bpc" id="L157" title="1 of 2 branches missed.">        if (userDetails == null) {</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (userDetails == null) {</span>
 <span class="nc" id="L158">            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)</span>
 <span class="nc" id="L159">                    .body(&quot;❌ Unauthorized&quot;);</span>
         }
 
-<span class="fc" id="L162">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
-<span class="pc" id="L163">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
+<span class="nc" id="L162">        User user = userRepo.findByUsername(userDetails.getUsername())</span>
+<span class="nc" id="L163">                .orElseThrow(() -&gt; new ResponseStatusException(</span>
                         HttpStatus.NOT_FOUND, &quot;User not found&quot;));
 
         // Check current password
-<span class="fc bfc" id="L167" title="All 2 branches covered.">        if (!encoder.matches(req.getCurrentPassword(), user.getPassword())) {</span>
-<span class="fc" id="L168">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
-<span class="fc" id="L169">                    .body(&quot;❌ Current password is incorrect&quot;);</span>
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (!encoder.matches(req.getCurrentPassword(), user.getPassword())) {</span>
+<span class="nc" id="L168">            return ResponseEntity.status(HttpStatus.BAD_REQUEST)</span>
+<span class="nc" id="L169">                    .body(&quot;❌ Current password is incorrect&quot;);</span>
         }
 
         // Update password
-<span class="fc" id="L173">        user.setPassword(encoder.encode(req.getNewPassword()));</span>
-<span class="fc" id="L174">        userRepo.saveAndFlush(user);</span>
+<span class="nc" id="L173">        user.setPassword(encoder.encode(req.getNewPassword()));</span>
+<span class="nc" id="L174">        userRepo.saveAndFlush(user);</span>
 
-<span class="fc" id="L176">        return ResponseEntity.ok(&quot;✅ Password changed successfully&quot;);</span>
+<span class="nc" id="L176">        return ResponseEntity.ok(&quot;✅ Password changed successfully&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
