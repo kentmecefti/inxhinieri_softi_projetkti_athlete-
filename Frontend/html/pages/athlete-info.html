@@ -11,18 +11,15 @@
 <div class="card">
     <form id="athleteForm">
 
-        <!-- USERNAME (full width) -->
         <div class="form-group" style="grid-column: 1 / -1;">
             <label>Username</label>
             <input id="username" type="text" readonly />
         </div>
 
-        <!-- CHANGE PASSWORD BUTTON (full width) -->
         <button id="openPassModal" class="btn" style="grid-column: 1 / -1;">
             Change Password
         </button>
 
-        <!-- ALL INPUTS (two columns) -->
         <div class="form-group">
             <label>Name:</label>
             <input type="text" id="name" required>
@@ -86,7 +83,6 @@
             <input type="text" id="city">
         </div>
 
-        <!-- SUBMIT BUTTON (full width) -->
         <button type="submit" style="grid-column: 1 / -1;">💾 Update Athlete</button>
 
         <div id="msg" class="msg" style="grid-column: 1 / -1;"></div>
@@ -94,7 +90,6 @@
     </form>
 </div>
 
-<!-- PASSWORD MODAL -->
 <div id="passModal" class="modal">
     <div class="modal-content">
         <span id="closePassModal" class="close">&times;</span>
@@ -110,7 +105,6 @@
     </div>
 </div>
 
-<!-- JS -->
 <script src="../../js/pages/athlete-info.js" defer></script>
 <script src="../../js/env.js"></script>
 <script src="../../js/acces.js"></script>

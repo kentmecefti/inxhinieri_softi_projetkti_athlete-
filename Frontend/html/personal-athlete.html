@@ -9,11 +9,10 @@
     <link rel="stylesheet" href="../css/common/menu.css" />
 </head>
 
-<body>
-<!-- ===== MENU TOGGLE ===== -->
+<body class="coach">
+
 <button class="menu-toggle" aria-label="Open menu">☰</button>
 
-<!-- ===== SIDEBAR MENU ===== -->
 <nav class="sidebar" id="sidebar">
     <div class="profile">
         <h2 id="userTitle">🏃 Athlete Menu</h2>
@@ -27,42 +26,39 @@
             <button class="tab" data-target="infoTab">🧍‍♂️ Athlete Info</button>
         </div>
     </div>
+
     <div class="top-actions">
         <button class="tab back-btn" onclick="goBack()">🏠 Go Home</button>
     </div>
+
     <div class="logout-container">
         <button id="logoutBtn" class="logout-btn blue">🚪 Logout</button>
     </div>
 </nav>
 
-<!-- ===== MAIN CONTENT ===== -->
 <main class="container">
 
-    <h1 id="pageTitle">🏃 Personal Athlete Page</h1>
-<!--    <object data="personal-coach.html" style="width:100%; border:0; height:200px;"></object>-->
-    <div id="insert-here"></div>
-    <!-- === COACHES & PLAN TAB === -->
+    <h1 id="pageTitle"></h1>
+
     <section id="coachTab" class="tab-content active">
         <h2 class="menu-title">👨‍🏫 Coaches & Plan</h2>
+
         <div class="action-buttons">
             <button class="btn requests" onclick="openRequests()">📩 View Coach Requests</button>
             <button class="btn plan-btn" onclick="openPlan(ATHLETE_ID)">🗓 Open Plan</button>
         </div>
 
-
-        <!-- IFRAMES -->
-        <div class="iframe-container hidden" id="planFrameContainer">
-            <iframe id="planFrame" width="100%" height="650" frameborder="0"></iframe>
+        <div class="iframe-section" id="planFrameSection" data-iframe>
+            <iframe id="planFrame" frameborder="0"></iframe>
         </div>
-
-        <div class="iframe-container hidden" id="requestFrameContainer">
-            <iframe id="requestFrame" width="100%" height="650" frameborder="0"></iframe>
+        <div class="iframe-section" id="requestFrameSection" data-iframe>
+            <iframe id="requestFrame" frameborder="0"></iframe>
         </div>
     </section>
 
-    <!-- === RESULTS TAB === -->
     <section id="resultTab" class="tab-content hidden">
         <h2 class="menu-title">📊 Results</h2>
+
         <div class="menu-grid">
             <button class="item-btn runner" onclick="openDivision(ATHLETE_ID, 'Runner', 'runner')">🏃 Runner</button>
             <button class="item-btn jumper" onclick="openDivision(ATHLETE_ID, 'Jumper', 'jumper')">🦘 Jumper</button>
@@ -71,17 +67,17 @@
             <button class="item-btn marathon" onclick="openDivision(ATHLETE_ID, 'Marathon', 'marathon')">🏅 Marathon</button>
         </div>
 
-        <div class="iframe-container hidden" id="resultFrameContainer">
-            <iframe id="resultFrame" width="100%" height="650" frameborder="0"></iframe>
+        <div class="iframe-section" id="resultFrameSection" data-iframe>
+            <iframe id="resultFrame" frameborder="0"></iframe>
         </div>
     </section>
 
-    <!-- === INFO TAB === -->
     <section id="infoTab" class="tab-content hidden">
-        <div class="iframe-container hidden" id="infoFrameContainer">
-            <iframe id="infoFrame" width="100%" height="650" frameborder="0"></iframe>
+        <div class="iframe-section" id="infoFrameSection" data-iframe>
+            <iframe id="infoFrame" frameborder="0"></iframe>
         </div>
     </section>
+
 </main>
 
 <div id="toastContainer"></div>

@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Reuse the same CSS file -->
     <link rel="stylesheet" href="/css/pages/athlete-info.css" />
 </head>
 <body>
@@ -12,18 +11,14 @@
 <div class="card">
     <form id="coachForm">
 
-        <!-- USERNAME (full width) -->
         <div class="form-group" style="grid-column: 1 / -1;">
             <label>Username</label>
             <input id="username" type="text" readonly />
         </div>
 
-        <!-- CHANGE PASSWORD BUTTON (full width) -->
         <button id="openPassModal" class="btn" style="grid-column: 1 / -1;">
             Change Password
         </button>
-
-        <!-- FORM INPUTS (two columns) -->
 
         <div class="form-group">
             <label>Name:</label>
@@ -68,7 +63,6 @@
             <input type="text" id="country" />
         </div>
 
-        <!-- SUBMIT BUTTON (full width) -->
         <button type="submit" style="grid-column: 1 / -1;">
             💾 Update Coach
         </button>
@@ -78,7 +72,6 @@
     </form>
 </div>
 
-<!-- PASSWORD MODAL -->
 <div id="passModal" class="modal">
     <div class="modal-content">
         <span id="closePassModal" class="close">&times;</span>
@@ -94,7 +87,6 @@
     </div>
 </div>
 
-<!-- JS -->
 <script src="/js/pages/coach-info.js" defer></script>
 <script src="../../js/env.js"></script>
 <script src="../../js/acces.js"></script>

@@ -4,13 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🏃 Athlete Marathon Dashboard</title>
-
-    <!-- PAGE CSS -->
     <link rel="stylesheet" href="../../../css/pages/work/marathon.css" />
 </head>
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="topbar">
     <div class="title-area">
         <h1>🏃 Marathon Dashboard</h1>
@@ -19,14 +16,12 @@
     </div>
 </header>
 
-<!-- ===== DATE FILTER ===== -->
 <div class="calendar-filter">
     <label for="runFilterDate">📅 Select date:</label>
     <input type="date" id="runFilterDate" />
     <button onclick="clearFilter()">Clear</button>
 </div>
 
-<!-- ===== STATS ===== -->
 <section class="stats">
     <div class="stat"><h3>🏁 Runs</h3><span id="statRuns">0</span></div>
     <div class="stat"><h3>🕒 Time</h3><span id="statTime">0</span> min</div>
@@ -34,89 +29,45 @@
     <div class="stat"><h3>📏 Distance</h3><span id="statDist">0</span> km</div>
 </section>
 
-<!-- ===== SESSION LIST ===== -->
 <main id="sessionsList" class="sessions">
     <p class="muted">Loading sessions...</p>
 </main>
 
-<!-- ===== ADD BUTTON ===== -->
 <button class="fab" onclick="toggleForm()">➕</button>
 
-<!-- ===== ADD SESSION MODAL ===== -->
 <div id="formModal" class="modal hidden">
     <div class="modal-content">
-        <div class="modal-body">
-            <h2>➕ Add Marathon Session</h2>
+        <h2>➕ Add Marathon Session</h2>
+        <form id="sessionForm" onsubmit="addMarathon(); return false;">
+            <label>Date <input type="date" id="marathonDate" required /></label>
+            <label>Time (min) <input type="number" id="marathonTimeMin" step="0.01" required /></label>
+            <label>Distance (km) <input type="number" id="marathonDistance" step="0.01" /></label>
+            <label>Avg HR (bpm) <input type="number" id="marathonHeartAvg" /></label>
+            <label>Max HR (bpm) <input type="number" id="marathonHeartMax" /></label>
+            <label>Calories <input type="number" id="marathonCalories" readonly /></label>
+            <label>Weather <input type="text" id="marathonWeather" /></label>
+            <label>Surface
+                <select id="marathonSurface">
+                    <option value="">Select…</option>
+                    <option>Road</option>
+                    <option>Trail</option>
+                    <option>Track</option>
+                </select>
+            </label>
+            <label>Notes</label>
+            <textarea id="marathonNotes" rows="3" placeholder="Optional notes..."></textarea>
 
-            <!-- 🔹 TWO COLUMN FORM -->
-            <form id="sessionForm" class="two-col-form" onsubmit="addMarathon(); return false;">
-
-                <label>
-                    Date
-                    <input type="date" id="marathonDate" required />
-                </label>
-
-                <label>
-                    Time (min)
-                    <input type="number" id="marathonTimeMin" step="0.01" required />
-                </label>
-
-                <label>
-                    Distance (km)
-                    <input type="number" id="marathonDistance" step="0.01" />
-                </label>
-
-                <label>
-                    Avg HR (bpm)
-                    <input type="number" id="marathonHeartAvg" />
-                </label>
-
-                <label>
-                    Max HR (bpm)
-                    <input type="number" id="marathonHeartMax" />
-                </label>
-
-                <label>
-                    Calories
-                    <input type="number" id="marathonCalories" readonly />
-                </label>
-
-                <label>
-                    Weather
-                    <input type="text" id="marathonWeather" />
-                </label>
-
-                <label>
-                    Surface
-                    <select id="marathonSurface">
-                        <option value="">Select…</option>
-                        <option>Road</option>
-                        <option>Trail</option>
-                        <option>Track</option>
-                    </select>
-                </label>
-
-                <!-- 🔹 FULL WIDTH -->
-                <label class="full-width">
-                    Notes
-                    <textarea id="marathonNotes" rows="3" placeholder="Optional notes..."></textarea>
-                </label>
-
-                <!-- 🔹 BUTTONS -->
-                <div class="buttons full-width">
-                    <button type="submit" class="save">💾 Save</button>
-                    <button type="button" class="cancel" onclick="toggleForm()">✖ Cancel</button>
-                </div>
-
-            </form>
-        </div>
+            <div class="buttons">
+                <button type="submit" class="save">💾 Save</button>
+                <button type="button" class="cancel" onclick="toggleForm()">✖ Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
 
-<!-- ===== SCRIPTS ===== -->
 <script src="../../../js/env.js"></script>
 <script src="../../../js/pages/work/marathon.js" defer></script>
 <script src="../../../js/acces.js"></script>
-
 </body>
 </html>
+

@@ -10,9 +10,6 @@
 
 <body>
 
-<!-- ============================
-     TOP BAR
-============================= -->
 <header class="topbar">
     
     <div class="topbar-center">
@@ -30,15 +27,22 @@
 </header>
 
 
-<!-- ============================
-     COACH ONLY: DROPDOWN
-============================= -->
 <div class="page-wrapper">
-    <div class="plan-actions" style="display:none; margin:20px 0;">
 
-    <button id="toggleAthletesBtn" class="btn ghost" style="margin-top:18px; display:none;">
-        👤 Select Athletes
-    </button>
+    <div class="top-action-row">
+
+        <div class="coach-actions">
+            <button id="toggleAthletesBtn" class="btn ghost" style="display:none;">
+                👤 Select Athletes
+            </button>
+        </div>
+
+        <div class="plan-actions" style="display:none;">
+            <button id="sendPredBtn" class="btn blue">📋 Save Prediction</button>
+            <button id="sendActBtn" class="btn green">✅ Save Actual</button>
+        </div>
+
+    </div>
 
     <div id="athleteDropdown" class="dropdown-container" style="display:none;">
         <label class="dropdown-label">Select Athletes</label>
@@ -48,19 +52,13 @@
 
         <div id="athleteList" class="dropdown-list"></div>
 
-        <p class="hint" style="font-size:0.8rem; color:#64748b; margin-top:10px;">
+        <p class="hint">
             Tip: Select "ALL Athletes" to send the plan to every accepted athlete.
         </p>
     </div>
 
-        <button id="sendPredBtn" class="btn blue">📋 Save Prediction</button>
-        <button id="sendActBtn" class="btn green">✅ Save Actual</button>
-    </div>
+</div>
 
-
-    <!-- ============================
-         MAIN CONTENT (TABLE)
-    ============================= -->
     <main>
         <div class="content"> <!-- Center alignment wrapper -->
             <table id="planTable">
@@ -74,25 +72,13 @@
 
 </div>
 
-
-<!-- ============================
-     LOADING OVERLAY
-============================= -->
 <div id="loadingOverlay" class="loading-overlay hidden">
     <div class="spinner"></div>
     <p>Processing...</p>
 </div>
 
-
-<!-- ============================
-     TOAST
-============================= -->
 <div id="toast" class="toast"></div>
 
-
-<!-- ============================
-     SCRIPTS
-============================= -->
 <script src="../../js/env.js"></script>
 <script src="../../js/acces.js"></script>
 <script src="../../js/pages/plan.js" defer></script>

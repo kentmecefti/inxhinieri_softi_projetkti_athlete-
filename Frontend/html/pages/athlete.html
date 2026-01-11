@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🏃 Athlete Manager — DataTable View</title>
 
-    <!-- DataTables CSS (must load FIRST) -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 
-    <!-- Your Theme CSS (must load LAST to override DataTables) -->
     <link rel="stylesheet" href="../../css/pages/again2.css">
 </head>
 
@@ -16,13 +14,10 @@
 <div class="container">
     <h1 id="coachName">🏃 Athlete Directory</h1>
 
-    <!-- AUTOCOMPLETE + LINKING -->
     <div class="username-link-box" style="position:relative; margin-bottom:20px;">
-
 
         <input id="athUsername" placeholder="Enter athlete name" autocomplete="off" />
 
-        <!-- Autocomplete dropdown -->
         <div id="nameSuggestions"
              style="
                 position:absolute;
@@ -37,10 +32,10 @@
                 display:none;
                 z-index:1000;">
         </div>
+
         <button class="link-btn" onclick="sendUsernameLink()">🔗 Link Athlete</button>
     </div>
     <div class="link-section"></div>
-    <!-- ATHLETE TABLE -->
     <table id="athleteTable" class="display" style="width:100%">
         <thead>
         <tr>
@@ -51,8 +46,6 @@
         </tr>
         </thead>
         <tbody>
-
-        <!-- Example Row (JS will replace this) -->
         <tr>
             <td>Really</td>
             <td>Try again if you can ..... hahahahahahah</td>
@@ -75,17 +68,14 @@
 
 </div>
 
-<!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<!-- ENV + Page Logic -->
 <script src="../../js/env.js"></script>
 <script src="../../js/pages/athlete.js" defer></script>
 <script src="../../js/acces.js"></script>
 
 <script>
-    // Initialize DataTable
     $(document).ready(function () {
         $('#athleteTable').DataTable();
     });

@@ -4,39 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>👨‍🏫 Coach Requests</title>
+
     <link rel="stylesheet" href="../../css/pages/requests.css">
 
-    <!-- ===== DATATABLES ===== -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
 </head>
 
 <body>
 
-<!-- =================== ACCEPTED COACHES DATATABLE =================== -->
 <div class="container">
     <h2>✔ Accepted Coaches</h2>
 
-    <table id="acceptedTable" class="display">
+    <table id="acceptedTable" class="display dataTable">
         <thead>
         <tr>
             <th>Coach</th>
             <th>Action</th>
         </tr>
         </thead>
+
         <tbody id="acceptedBody">
-        <tr><td colspan="2">Loading...</td></tr>
+        <tr>
+            <td data-label="Coach">Loading…</td>
+            <td data-label="Action"></td>
+        </tr>
         </tbody>
     </table>
 </div>
 
-<!-- =================== PENDING REQUESTS =================== -->
 <div class="container">
     <h1>👨‍🏫 Coach Link Requests</h1>
 
-    <table id="requestTable" class="display">
+    <table id="requestTable" class="display dataTable">
         <thead>
         <tr>
             <th>Coach</th>
@@ -44,8 +45,13 @@
             <th>Action</th>
         </tr>
         </thead>
+
         <tbody id="requestBody">
-        <tr><td colspan="3">Loading...</td></tr>
+        <tr>
+            <td data-label="Coach">Loading…</td>
+            <td data-label="Status">—</td>
+            <td data-label="Action"></td>
+        </tr>
         </tbody>
     </table>
 </div>
